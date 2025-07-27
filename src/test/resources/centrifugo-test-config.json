@@ -1,0 +1,23 @@
+{
+  "client": {
+    "token": {
+      "hmac_secret_key": "test-secret-key-for-integration-tests-only"
+    },
+    "allowed_origins": []
+  },
+  "admin": {
+    "enabled": false
+  },
+  "http_api": {
+    "key": "test-api-key-for-integration-tests"
+  },
+  "swagger": {
+    "enabled": true
+  },
+  "debug": true,
+  "history_size": 10,
+  "history_ttl": "300s",
+  "presence": true,
+  "join_leave": true,
+  "force_push_join_leave": true
+}

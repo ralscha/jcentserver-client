@@ -179,11 +179,6 @@
                     <additionalOptions>-Xdoclint:none</additionalOptions>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>io.spring.javaformat</groupId>
-				<artifactId>spring-javaformat-maven-plugin</artifactId>
-				<version>0.0.46</version>
-			</plugin>            
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>
