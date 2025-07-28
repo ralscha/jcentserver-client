@@ -15,9 +15,13 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * Request for getting server information (empty object).
  */
+@JsonInclude(Include.NON_EMPTY)
 public record InfoRequest() {
 
 	public static Builder builder() {

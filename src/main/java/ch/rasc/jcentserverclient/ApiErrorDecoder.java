@@ -23,6 +23,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import feign.Response.Body;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 
@@ -40,10 +41,10 @@ public class ApiErrorDecoder implements feign.codec.ErrorDecoder {
 		String responseBody = null;
 		ApiError error = null;
 
-		try (InputStream inputStream = response.body().asInputStream()) {
+		try (Body body = response.body(); InputStream inputStream = body.asInputStream()) {
 			responseBody = new String(inputStream.readAllBytes());
 
-			if (responseBody != null && !responseBody.trim().isEmpty()) {
+			if (!responseBody.trim().isEmpty()) {
 				JsonFactory factory = this.objectMapper.getFactory();
 				try (JsonParser parser = factory.createParser(responseBody)) {
 					if (parser.nextToken() == JsonToken.START_OBJECT) {

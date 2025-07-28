@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for subscribing a user to a channel.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record SubscribeRequest(@JsonProperty("channel") String channel, @JsonProperty("user") String user,
 		@JsonProperty("expire_at") Long expireAt, @JsonProperty("info") Object info,
 		@JsonProperty("b64info") String b64info, @JsonProperty("client") String client,
@@ -111,6 +115,12 @@ public record SubscribeRequest(@JsonProperty("channel") String channel, @JsonPro
 		}
 
 		public SubscribeRequest build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
+			if (this.channel == null || this.channel.trim().isEmpty()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
 			return new SubscribeRequest(this.channel, this.user, this.expireAt, this.info, this.b64info, this.client,
 					this.data, this.b64data, this.recoverSince, this.override, this.session);
 		}

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * User status information.
  */
+@SuppressWarnings({ "hiding" })
 public record UserStatus(@JsonProperty("user") String user, @JsonProperty("active") Integer active,
 		@JsonProperty("online") Integer online, @JsonProperty("state") String state) {
 
@@ -58,6 +59,9 @@ public record UserStatus(@JsonProperty("user") String user, @JsonProperty("activ
 		}
 
 		public UserStatus build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
 			return new UserStatus(this.user, this.active, this.online, this.state);
 		}
 

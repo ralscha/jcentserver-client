@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for getting channel history.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record HistoryRequest(@JsonProperty("channel") String channel, @JsonProperty("limit") Integer limit,
 		@JsonProperty("since") StreamPosition since, @JsonProperty("reverse") Boolean reverse) {
 
@@ -58,6 +62,9 @@ public record HistoryRequest(@JsonProperty("channel") String channel, @JsonPrope
 		}
 
 		public HistoryRequest build() {
+			if (this.channel == null || this.channel.trim().isEmpty()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
 			return new HistoryRequest(this.channel, this.limit, this.since, this.reverse);
 		}
 

@@ -6,7 +6,7 @@
     "allowed_origins": []
   },
   "admin": {
-    "enabled": false,
+    "enabled": true,
     "password": "7hyht9k4bYW_6syVN2oV_w",
     "secret": "zbOTbRNe4TuC5gY5MW5PAkv_VUOw2_srrECopiuKvUg50BnABv6GAi_6dVfYk_vqMgH2jJh5Xu8MOrAthgqb4Q"
   },
@@ -15,5 +15,19 @@
   },
   "swagger": {
     "enabled": true
-  }  
+  },
+  "channel": {
+	  "namespaces": [
+		{
+		  "name": "chat",
+		  "presence": true,
+		  "history_size": 20,
+		  "history_ttl": "600s"
+		},
+		{
+		  "name": "personal",
+		  "presence": false
+		}
+	  ]	
+  }
 }

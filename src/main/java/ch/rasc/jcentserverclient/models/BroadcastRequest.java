@@ -18,11 +18,15 @@ package ch.rasc.jcentserverclient.models;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for broadcasting data to multiple channels.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record BroadcastRequest(@JsonProperty("channels") List<String> channels, @JsonProperty("data") Object data,
 		@JsonProperty("b64data") String b64data, @JsonProperty("skip_history") Boolean skipHistory,
 		@JsonProperty("tags") Map<String, String> tags, @JsonProperty("idempotency_key") String idempotencyKey,
@@ -49,7 +53,12 @@ public record BroadcastRequest(@JsonProperty("channels") List<String> channels, 
 		private Boolean delta;
 
 		public Builder channels(List<String> channels) {
-			this.channels = channels;
+			this.channels = List.copyOf(channels);
+			return this;
+		}
+
+		public Builder channels(String... channels) {
+			this.channels = List.of(channels);
 			return this;
 		}
 
@@ -84,6 +93,12 @@ public record BroadcastRequest(@JsonProperty("channels") List<String> channels, 
 		}
 
 		public BroadcastRequest build() {
+			if (this.channels == null || this.channels.isEmpty()) {
+				throw new IllegalArgumentException("'channels' is required and cannot be null or empty");
+			}
+			if (this.data == null) {
+				throw new IllegalArgumentException("'data' is required and cannot be null");
+			}
 			return new BroadcastRequest(this.channels, this.data, this.b64data, this.skipHistory, this.tags,
 					this.idempotencyKey, this.delta);
 		}

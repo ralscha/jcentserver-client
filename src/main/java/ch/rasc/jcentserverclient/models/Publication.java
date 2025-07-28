@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Publication object.
  */
+@SuppressWarnings({ "hiding" })
 public record Publication(@JsonProperty("data") Object data, @JsonProperty("info") ClientInfo info,
 		@JsonProperty("offset") Long offset, @JsonProperty("tags") Map<String, String> tags) {
 

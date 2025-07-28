@@ -17,11 +17,15 @@ package ch.rasc.jcentserverclient.models;
 
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for publishing data into a channel.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record PublishRequest(@JsonProperty("channel") String channel, @JsonProperty("data") Object data,
 		@JsonProperty("b64data") String b64data, @JsonProperty("skip_history") Boolean skipHistory,
 		@JsonProperty("tags") Map<String, String> tags, @JsonProperty("idempotency_key") String idempotencyKey,
@@ -83,6 +87,12 @@ public record PublishRequest(@JsonProperty("channel") String channel, @JsonPrope
 		}
 
 		public PublishRequest build() {
+			if (this.channel == null || this.channel.trim().isEmpty()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
+			if (this.data == null) {
+				throw new IllegalArgumentException("'data' is required and cannot be null");
+			}
 			return new PublishRequest(this.channel, this.data, this.b64data, this.skipHistory, this.tags,
 					this.idempotencyKey, this.delta);
 		}

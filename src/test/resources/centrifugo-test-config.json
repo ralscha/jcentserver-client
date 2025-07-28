@@ -14,10 +14,16 @@
   "swagger": {
     "enabled": true
   },
-  "debug": true,
-  "history_size": 10,
-  "history_ttl": "300s",
-  "presence": true,
-  "join_leave": true,
-  "force_push_join_leave": true
+  "debug": {
+    "enabled": true
+  },
+  "channel": {
+    "without_namespace": {
+      "history_size": 10,
+      "history_ttl": "300s",
+      "presence": true,
+      "join_leave": true,
+      "force_push_join_leave": true
+    }
+  }
 }

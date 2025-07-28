@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for getting connections information.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record ConnectionsRequest(@JsonProperty("user") String user, @JsonProperty("expression") String expression) {
 
 	public static Builder builder() {

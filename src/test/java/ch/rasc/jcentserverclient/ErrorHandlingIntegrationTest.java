@@ -24,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import ch.rasc.jcentserverclient.models.PublishRequest;
+import ch.rasc.jcentserverclient.models.PublishResponse;
 
 /**
  * Integration tests for error handling and edge cases. Tests how the client handles
@@ -49,24 +50,17 @@ class ErrorHandlingIntegrationTest extends CentrifugoIntegrationTestBase {
 	}
 
 	@Test
-	@DisplayName("Should handle empty channel name")
+	@DisplayName("Should handle empty channel name with exception")
 	void shouldHandleEmptyChannelName() {
-		// Given
-		PublishRequest request = PublishRequest.builder().channel("").data(Map.of("message", "test")).build();
-
-		// When & Then - Depending on Centrifugo's validation, this may throw or return an
-		// error
-		assertThatThrownBy(() -> this.client.publication().publish(request)).isInstanceOf(Exception.class);
+		assertThatThrownBy(() -> PublishRequest.builder().channel("").data(Map.of("message", "test")).build())
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
-	@DisplayName("Should handle null data gracefully")
-	void shouldHandleNullDataGracefully() {
-		// Given
-		PublishRequest request = PublishRequest.builder().channel("test-channel").data(null).build();
-
-		// When & Then - Should handle null data appropriately
-		assertThatThrownBy(() -> this.client.publication().publish(request)).isInstanceOf(Exception.class);
+	@DisplayName("Should handle null data with exception")
+	void shouldHandleNullDataWithException() {
+		assertThatThrownBy(() -> PublishRequest.builder().channel("test-channel").data(null).build())
+			.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
@@ -75,13 +69,16 @@ class ErrorHandlingIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given - Create a very long channel name
 		String longChannelName = "a".repeat(1000);
 
+		// When & Then - Should handle long channel names without error
 		PublishRequest request = PublishRequest.builder()
 			.channel(longChannelName)
 			.data(Map.of("message", "test"))
 			.build();
 
-		// When & Then - Should handle long channel names appropriately
-		assertThatThrownBy(() -> this.client.publication().publish(request)).isInstanceOf(Exception.class);
+		PublishResponse response = this.client.publication().publish(request);
+		assertThat(response).isNotNull();
+		assertThat(response.result()).isNotNull();
+		assertThat(response.error()).isNull();
 	}
 
 	@Test

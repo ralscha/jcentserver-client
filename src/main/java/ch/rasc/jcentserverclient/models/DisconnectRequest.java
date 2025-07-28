@@ -17,11 +17,15 @@ package ch.rasc.jcentserverclient.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for disconnecting a user.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty("client") String client,
 		@JsonProperty("session") String session, @JsonProperty("whitelist") List<String> whitelist,
 		@JsonProperty("disconnect") Disconnect disconnect) {
@@ -58,7 +62,12 @@ public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty
 		}
 
 		public Builder whitelist(List<String> whitelist) {
-			this.whitelist = whitelist;
+			this.whitelist = List.copyOf(whitelist);
+			return this;
+		}
+
+		public Builder whitelist(String... whitelist) {
+			this.whitelist = List.of(whitelist);
 			return this;
 		}
 
@@ -68,6 +77,9 @@ public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty
 		}
 
 		public DisconnectRequest build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
 			return new DisconnectRequest(this.user, this.client, this.session, this.whitelist, this.disconnect);
 		}
 

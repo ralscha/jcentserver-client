@@ -23,4 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Result of a broadcast operation.
  */
 public record BroadcastResult(@JsonProperty("responses") List<PublishResponse> responses) {
+	public boolean hasError() {
+		return this.responses != null && this.responses.stream().anyMatch(PublishResponse::hasError);
+	}
 }

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Information about a channel.
  */
+@SuppressWarnings({ "hiding" })
 public record ChannelInfo(@JsonProperty("num_clients") Long numClients) {
 
 	public static Builder builder() {

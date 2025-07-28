@@ -27,7 +27,7 @@ public record BroadcastResponse(@JsonProperty("error") Error error, @JsonPropert
 	 * @return true if there is an error, false otherwise
 	 */
 	public boolean hasError() {
-		return this.error != null;
+		return this.error != null || (this.result() != null && this.result().hasError());
 	}
 
 	/**

@@ -23,43 +23,4 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record ClientInfo(@JsonProperty("client") String client, @JsonProperty("user") String user,
 		@JsonProperty("conn_info") Object connInfo, @JsonProperty("chan_info") Object chanInfo) {
 
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	public static class Builder {
-
-		private String client;
-
-		private String user;
-
-		private Object connInfo;
-
-		private Object chanInfo;
-
-		public Builder client(String client) {
-			this.client = client;
-			return this;
-		}
-
-		public Builder user(String user) {
-			this.user = user;
-			return this;
-		}
-
-		public Builder connInfo(Object connInfo) {
-			this.connInfo = connInfo;
-			return this;
-		}
-
-		public Builder chanInfo(Object chanInfo) {
-			this.chanInfo = chanInfo;
-			return this;
-		}
-
-		public ClientInfo build() {
-			return new ClientInfo(this.client, this.user, this.connInfo, this.chanInfo);
-		}
-
-	}
 }

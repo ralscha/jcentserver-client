@@ -62,8 +62,7 @@ class CentrifugoComprehensiveIntegrationTest extends CentrifugoIntegrationTestBa
 		assertThat(publishResponse.error()).isNull();
 
 		// When - Step 2: Check channel exists in channels list
-		ChannelsRequest channelsRequest = ChannelsRequest.builder().build();
-		ChannelsResponse channelsResponse = this.client.channels().channels(channelsRequest);
+		ChannelsResponse channelsResponse = this.client.channels().channels();
 
 		// Then - Verify channels response
 		assertThat(channelsResponse).isNotNull();
@@ -82,7 +81,7 @@ class CentrifugoComprehensiveIntegrationTest extends CentrifugoIntegrationTestBa
 		assertThat(historyResponse.error()).isNull();
 
 		// When - Step 4: Check presence stats
-		PresenceStatsRequest presenceStatsRequest = PresenceStatsRequest.builder().channel(channel).build();
+		PresenceStatsRequest presenceStatsRequest = PresenceStatsRequest.of(channel);
 
 		PresenceStatsResponse presenceStatsResponse = this.client.presence().presenceStats(presenceStatsRequest);
 

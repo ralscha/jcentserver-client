@@ -17,11 +17,15 @@ package ch.rasc.jcentserverclient.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Request for batch operations.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record BatchRequest(@JsonProperty("commands") List<Command> commands,
 		@JsonProperty("parallel") Boolean parallel) {
 
@@ -35,8 +39,19 @@ public record BatchRequest(@JsonProperty("commands") List<Command> commands,
 
 		private Boolean parallel;
 
+		public Builder commands(Command... commands) {
+			if (commands == null || commands.length == 0) {
+				throw new IllegalArgumentException("'commands' is required and cannot be null or empty");
+			}
+			this.commands = List.of(commands);
+			return this;
+		}
+
 		public Builder commands(List<Command> commands) {
-			this.commands = commands;
+			if (commands == null || commands.isEmpty()) {
+				throw new IllegalArgumentException("'commands' is required and cannot be null or empty");
+			}
+			this.commands = List.copyOf(commands);
 			return this;
 		}
 

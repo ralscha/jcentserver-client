@@ -1,6 +1,5 @@
 services:
   centrifugo:
-    container_name: centrifugo
     image: centrifugo/centrifugo:v6
     volumes:
       - ./config.json:/centrifugo/config.json

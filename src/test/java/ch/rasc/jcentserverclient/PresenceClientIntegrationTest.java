@@ -38,7 +38,7 @@ class PresenceClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given
 		String channel = "presence-test-channel";
 
-		PresenceRequest request = PresenceRequest.builder().channel(channel).build();
+		PresenceRequest request = PresenceRequest.of(channel);
 
 		// When
 		PresenceResponse response = this.client.presence().presence(request);
@@ -56,7 +56,7 @@ class PresenceClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given
 		String channel = "presence-stats-test-channel";
 
-		PresenceStatsRequest request = PresenceStatsRequest.builder().channel(channel).build();
+		PresenceStatsRequest request = PresenceStatsRequest.of(channel);
 
 		// When
 		PresenceStatsResponse response = this.client.presence().presenceStats(request);
@@ -79,7 +79,7 @@ class PresenceClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given
 		String channel = "non-existent-channel-" + System.currentTimeMillis();
 
-		PresenceRequest request = PresenceRequest.builder().channel(channel).build();
+		PresenceRequest request = PresenceRequest.of(channel);
 
 		// When
 		PresenceResponse response = this.client.presence().presence(request);
@@ -98,7 +98,7 @@ class PresenceClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given
 		String channel = "non-existent-stats-channel-" + System.currentTimeMillis();
 
-		PresenceStatsRequest request = PresenceStatsRequest.builder().channel(channel).build();
+		PresenceStatsRequest request = PresenceStatsRequest.of(channel);
 
 		// When
 		PresenceStatsResponse response = this.client.presence().presenceStats(request);

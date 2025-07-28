@@ -17,29 +17,28 @@ package ch.rasc.jcentserverclient.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request to update user status.
  */
+@JsonInclude(Include.NON_EMPTY)
 public record UpdateUserStatusRequest(@JsonProperty("users") List<UserStatus> users) {
 
-	public static Builder builder() {
-		return new Builder();
+	public static UpdateUserStatusRequest of(UserStatus... users) {
+		if (users == null || users.length == 0) {
+			throw new IllegalArgumentException("'users' is required and cannot be null or empty");
+		}
+		return new UpdateUserStatusRequest(List.of(users));
 	}
 
-	public static class Builder {
-
-		private List<UserStatus> users;
-
-		public Builder users(List<UserStatus> users) {
-			this.users = users;
-			return this;
+	public static UpdateUserStatusRequest of(List<UserStatus> users) {
+		if (users == null || users.isEmpty()) {
+			throw new IllegalArgumentException("'users' is required and cannot be null or empty");
 		}
-
-		public UpdateUserStatusRequest build() {
-			return new UpdateUserStatusRequest(this.users);
-		}
-
+		return new UpdateUserStatusRequest(List.copyOf(users));
 	}
+
 }

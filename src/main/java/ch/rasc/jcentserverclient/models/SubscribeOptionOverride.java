@@ -20,10 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Override for channel subscription options.
  */
-public record SubscribeOptionOverride(@JsonProperty("presence") BoolValue presence,
-		@JsonProperty("join_leave") BoolValue joinLeave, @JsonProperty("force_recovery") BoolValue forceRecovery,
-		@JsonProperty("force_positioning") BoolValue forcePositioning,
-		@JsonProperty("force_push_join_leave") BoolValue forcePushJoinLeave) {
+@SuppressWarnings({ "hiding" })
+public record SubscribeOptionOverride(@JsonProperty("presence") Boolean presence,
+		@JsonProperty("join_leave") Boolean joinLeave, @JsonProperty("force_recovery") Boolean forceRecovery,
+		@JsonProperty("force_positioning") Boolean forcePositioning,
+		@JsonProperty("force_push_join_leave") Boolean forcePushJoinLeave) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -31,37 +32,37 @@ public record SubscribeOptionOverride(@JsonProperty("presence") BoolValue presen
 
 	public static class Builder {
 
-		private BoolValue presence;
+		private Boolean presence;
 
-		private BoolValue joinLeave;
+		private Boolean joinLeave;
 
-		private BoolValue forceRecovery;
+		private Boolean forceRecovery;
 
-		private BoolValue forcePositioning;
+		private Boolean forcePositioning;
 
-		private BoolValue forcePushJoinLeave;
+		private Boolean forcePushJoinLeave;
 
-		public Builder presence(BoolValue presence) {
+		public Builder presence(Boolean presence) {
 			this.presence = presence;
 			return this;
 		}
 
-		public Builder joinLeave(BoolValue joinLeave) {
+		public Builder joinLeave(Boolean joinLeave) {
 			this.joinLeave = joinLeave;
 			return this;
 		}
 
-		public Builder forceRecovery(BoolValue forceRecovery) {
+		public Builder forceRecovery(Boolean forceRecovery) {
 			this.forceRecovery = forceRecovery;
 			return this;
 		}
 
-		public Builder forcePositioning(BoolValue forcePositioning) {
+		public Builder forcePositioning(Boolean forcePositioning) {
 			this.forcePositioning = forcePositioning;
 			return this;
 		}
 
-		public Builder forcePushJoinLeave(BoolValue forcePushJoinLeave) {
+		public Builder forcePushJoinLeave(Boolean forcePushJoinLeave) {
 			this.forcePushJoinLeave = forcePushJoinLeave;
 			return this;
 		}

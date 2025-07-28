@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Process information.
  */
+@SuppressWarnings({ "hiding" })
 public record Process(@JsonProperty("cpu") Double cpu, @JsonProperty("rss") Long rss) {
 
 	public static Builder builder() {

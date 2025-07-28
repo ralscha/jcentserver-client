@@ -17,8 +17,6 @@ package ch.rasc.jcentserverclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +40,7 @@ class UserStatusClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		String user = "test-user-status-" + System.currentTimeMillis();
 		UserStatus userStatus = UserStatus.builder().user(user).build();
 
-		UpdateUserStatusRequest request = UpdateUserStatusRequest.builder().users(List.of(userStatus)).build();
+		UpdateUserStatusRequest request = UpdateUserStatusRequest.of(userStatus);
 
 		// When
 		UpdateUserStatusResponse response = this.client.userStatus().updateUserStatus(request);
@@ -58,7 +56,7 @@ class UserStatusClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given
 		String nonExistentUser = "non-existent-user-" + System.currentTimeMillis();
 
-		GetUserStatusRequest request = GetUserStatusRequest.builder().users(List.of(nonExistentUser)).build();
+		GetUserStatusRequest request = GetUserStatusRequest.of(nonExistentUser);
 
 		// When
 		GetUserStatusResponse response = this.client.userStatus().getUserStatus(request);

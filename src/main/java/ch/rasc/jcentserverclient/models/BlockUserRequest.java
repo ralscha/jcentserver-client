@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request to block a user.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record BlockUserRequest(@JsonProperty("user") String user, @JsonProperty("expired_at") Long expiredAt) {
 
 	public static Builder builder() {
@@ -43,6 +47,9 @@ public record BlockUserRequest(@JsonProperty("user") String user, @JsonProperty(
 		}
 
 		public BlockUserRequest build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
 			return new BlockUserRequest(this.user, this.expiredAt);
 		}
 

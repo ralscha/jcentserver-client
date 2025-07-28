@@ -25,6 +25,8 @@ import org.junit.jupiter.api.Test;
 
 import ch.rasc.jcentserverclient.models.ChannelsRequest;
 import ch.rasc.jcentserverclient.models.ChannelsResponse;
+import ch.rasc.jcentserverclient.models.PublishRequest;
+import ch.rasc.jcentserverclient.models.PublishResponse;
 
 /**
  * Integration tests for Channels client operations. Tests channel listing and information
@@ -39,10 +41,8 @@ class ChannelsClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given - First publish to some channels to ensure they exist
 		publishToChannels(List.of("channel-1", "channel-2", "channel-3"));
 
-		ChannelsRequest request = ChannelsRequest.builder().build();
-
 		// When
-		ChannelsResponse response = this.client.channels().channels(request);
+		ChannelsResponse response = this.client.channels().channels();
 
 		// Then
 		assertThat(response).isNotNull();
@@ -57,7 +57,7 @@ class ChannelsClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given - Publish to channels with specific pattern
 		publishToChannels(List.of("test-channel-1", "test-channel-2", "other-channel"));
 
-		ChannelsRequest request = ChannelsRequest.builder().pattern("test-*").build();
+		ChannelsRequest request = ChannelsRequest.of("test-*");
 
 		// When
 		ChannelsResponse response = this.client.channels().channels(request);
@@ -75,10 +75,8 @@ class ChannelsClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given - Publish to multiple channels
 		publishToChannels(List.of("limited-1", "limited-2", "limited-3", "limited-4", "limited-5"));
 
-		ChannelsRequest request = ChannelsRequest.builder().build();
-
 		// When
-		ChannelsResponse response = this.client.channels().channels(request);
+		ChannelsResponse response = this.client.channels().channels();
 
 		// Then
 		assertThat(response).isNotNull();
@@ -91,7 +89,7 @@ class ChannelsClientIntegrationTest extends CentrifugoIntegrationTestBase {
 	@DisplayName("Should handle empty channel list")
 	void shouldHandleEmptyChannelList() {
 		// Given - Use a pattern that matches no channels
-		ChannelsRequest request = ChannelsRequest.builder().pattern("non-existent-pattern-*").build();
+		ChannelsRequest request = ChannelsRequest.of("non-existent-pattern-*");
 
 		// When
 		ChannelsResponse response = this.client.channels().channels(request);
@@ -107,8 +105,11 @@ class ChannelsClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		Map<String, Object> data = Map.of("message", "test data");
 
 		for (String channel : channels) {
-			this.client.publication()
-				.publish(ch.rasc.jcentserverclient.models.PublishRequest.builder().channel(channel).data(data).build());
+			PublishResponse response = this.client.publication()
+				.publish(PublishRequest.builder().channel(channel).data(data).build());
+			assertThat(response).isNotNull();
+			assertThat(response.result()).isNotNull();
+			assertThat(response.error()).isNull();
 		}
 
 		// Small delay to ensure channels are registered

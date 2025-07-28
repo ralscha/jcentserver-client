@@ -85,8 +85,7 @@ class BatchClientIntegrationTest extends CentrifugoIntegrationTestBase {
 		// Given - Create mixed batch commands
 		List<Command> commands = List.of(Command.builder()
 			.publish(PublishRequest.builder().channel("mixed-batch-channel").data(Map.of("action", "publish")).build())
-			.build(), Command.builder().channels(ChannelsRequest.builder().build()).build(),
-				Command.builder().info(InfoRequest.builder().build()).build());
+			.build(), Command.builder().info(InfoRequest.builder().build()).build());
 
 		BatchRequest request = BatchRequest.builder().commands(commands).build();
 
@@ -140,8 +139,7 @@ class BatchClientIntegrationTest extends CentrifugoIntegrationTestBase {
 						.data(Map.of("timestamp", System.currentTimeMillis()))
 						.build())
 					.build(),
-				Command.builder().info(InfoRequest.builder().build()).build(),
-				Command.builder().channels(ChannelsRequest.builder().build()).build());
+				Command.builder().info(InfoRequest.builder().build()).build());
 
 		BatchRequest request = BatchRequest.builder().commands(commands).parallel(true).build();
 

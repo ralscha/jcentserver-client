@@ -15,29 +15,21 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Request to unblock a user.
  */
+@JsonInclude(Include.NON_EMPTY)
 public record UnblockUserRequest(@JsonProperty("user") String user) {
 
-	public static Builder builder() {
-		return new Builder();
+	public static UnblockUserRequest of(String user) {
+		if (user == null || user.trim().isEmpty()) {
+			throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+		}
+		return new UnblockUserRequest(user);
 	}
 
-	public static class Builder {
-
-		private String user;
-
-		public Builder user(String user) {
-			this.user = user;
-			return this;
-		}
-
-		public UnblockUserRequest build() {
-			return new UnblockUserRequest(this.user);
-		}
-
-	}
 }

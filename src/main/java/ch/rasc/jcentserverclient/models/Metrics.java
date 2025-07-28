@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Metrics information.
  */
+@SuppressWarnings({ "hiding" })
 public record Metrics(@JsonProperty("interval") Double interval, @JsonProperty("items") Map<String, Double> items) {
 
 	public static Builder builder() {

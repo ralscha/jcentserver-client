@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Connection token information.
  */
+@SuppressWarnings({ "hiding" })
 public record ConnectionTokenInfo(@JsonProperty("uid") String uid, @JsonProperty("issued_at") Long issuedAt) {
 
 	public static Builder builder() {

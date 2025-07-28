@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Error type represents Centrifugo-level API call error.
  */
+@SuppressWarnings({ "hiding" })
 public record Error(@JsonProperty("code") Long code, @JsonProperty("message") String message) {
 
 	public static Builder builder() {

@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for unsubscribing a user from a channel.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record UnsubscribeRequest(@JsonProperty("user") String user, @JsonProperty("channel") String channel,
 		@JsonProperty("client") String client, @JsonProperty("session") String session) {
 
@@ -58,6 +62,12 @@ public record UnsubscribeRequest(@JsonProperty("user") String user, @JsonPropert
 		}
 
 		public UnsubscribeRequest build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
+			if (this.channel == null || this.channel.trim().isEmpty()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
 			return new UnsubscribeRequest(this.user, this.channel, this.client, this.session);
 		}
 

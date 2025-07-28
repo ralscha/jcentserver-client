@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for refreshing a user connection.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record RefreshRequest(@JsonProperty("user") String user, @JsonProperty("client") String client,
 		@JsonProperty("session") String session, @JsonProperty("expired") Boolean expired,
 		@JsonProperty("expire_at") Long expireAt, @JsonProperty("info") Object info) {
@@ -73,6 +77,9 @@ public record RefreshRequest(@JsonProperty("user") String user, @JsonProperty("c
 		}
 
 		public RefreshRequest build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
 			return new RefreshRequest(this.user, this.client, this.session, this.expired, this.expireAt, this.info);
 		}
 

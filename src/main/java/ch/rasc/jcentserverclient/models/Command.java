@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Command object for batch operations.
  */
+@SuppressWarnings({ "hiding" })
 public record Command(@JsonProperty("publish") PublishRequest publish,
 		@JsonProperty("broadcast") BroadcastRequest broadcast, @JsonProperty("subscribe") SubscribeRequest subscribe,
 		@JsonProperty("unsubscribe") UnsubscribeRequest unsubscribe,

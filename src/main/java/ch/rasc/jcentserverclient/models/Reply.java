@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Reply object for batch operations.
  */
+@SuppressWarnings({ "hiding" })
 public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish") PublishResult publish,
 		@JsonProperty("broadcast") BroadcastResult broadcast, @JsonProperty("subscribe") SubscribeResult subscribe,
 		@JsonProperty("unsubscribe") UnsubscribeResult unsubscribe,

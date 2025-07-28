@@ -15,29 +15,22 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request for getting channels information.
  */
+@JsonInclude(Include.NON_EMPTY)
 public record ChannelsRequest(@JsonProperty("pattern") String pattern) {
 
-	public static Builder builder() {
-		return new Builder();
+	/**
+	 * Creates a new ChannelsRequest with the specified pattern.
+	 * @param pattern the pattern to match channels
+	 */
+	public static ChannelsRequest of(String pattern) {
+		return new ChannelsRequest(pattern);
 	}
 
-	public static class Builder {
-
-		private String pattern;
-
-		public Builder pattern(String pattern) {
-			this.pattern = pattern;
-			return this;
-		}
-
-		public ChannelsRequest build() {
-			return new ChannelsRequest(this.pattern);
-		}
-
-	}
 }

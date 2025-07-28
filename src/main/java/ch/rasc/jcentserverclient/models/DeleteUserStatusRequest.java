@@ -17,29 +17,27 @@ package ch.rasc.jcentserverclient.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request to delete user status.
  */
+@JsonInclude(Include.NON_EMPTY)
 public record DeleteUserStatusRequest(@JsonProperty("users") List<String> users) {
 
-	public static Builder builder() {
-		return new Builder();
+	public static DeleteUserStatusRequest of(List<String> users) {
+		if (users == null || users.isEmpty()) {
+			throw new IllegalArgumentException("'users' is required and cannot be null or empty");
+		}
+		return new DeleteUserStatusRequest(List.copyOf(users));
 	}
 
-	public static class Builder {
-
-		private List<String> users;
-
-		public Builder users(List<String> users) {
-			this.users = users;
-			return this;
+	public static DeleteUserStatusRequest of(String... users) {
+		if (users == null || users.length == 0) {
+			throw new IllegalArgumentException("'users' is required and cannot be null or empty");
 		}
-
-		public DeleteUserStatusRequest build() {
-			return new DeleteUserStatusRequest(this.users);
-		}
-
+		return new DeleteUserStatusRequest(List.of(users));
 	}
 }

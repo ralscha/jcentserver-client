@@ -22,22 +22,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public record HistoryRemoveRequest(@JsonProperty("channel") String channel) {
 
-	public static Builder builder() {
-		return new Builder();
+	public static HistoryRemoveRequest of(String channel) {
+		if (channel == null || channel.trim().isEmpty()) {
+			throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+		}
+		return new HistoryRemoveRequest(channel);
 	}
 
-	public static class Builder {
-
-		private String channel;
-
-		public Builder channel(String channel) {
-			this.channel = channel;
-			return this;
-		}
-
-		public HistoryRemoveRequest build() {
-			return new HistoryRemoveRequest(this.channel);
-		}
-
-	}
 }

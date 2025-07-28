@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Connection information.
  */
+@SuppressWarnings({ "hiding" })
 public record ConnectionInfo(@JsonProperty("app_name") String appName, @JsonProperty("app_version") String appVersion,
 		@JsonProperty("transport") String transport, @JsonProperty("protocol") String protocol,
 		@JsonProperty("user") String user, @JsonProperty("state") ConnectionState state) {

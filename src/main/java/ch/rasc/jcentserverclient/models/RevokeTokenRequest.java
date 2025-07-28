@@ -15,29 +15,20 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request to revoke a token.
  */
+@JsonInclude(Include.NON_EMPTY)
 public record RevokeTokenRequest(@JsonProperty("uid") String uid) {
 
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	public static class Builder {
-
-		private String uid;
-
-		public Builder uid(String uid) {
-			this.uid = uid;
-			return this;
+	public static RevokeTokenRequest of(String uid) {
+		if (uid == null || uid.trim().isEmpty()) {
+			throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
 		}
-
-		public RevokeTokenRequest build() {
-			return new RevokeTokenRequest(this.uid);
-		}
-
+		return new RevokeTokenRequest(uid);
 	}
 }

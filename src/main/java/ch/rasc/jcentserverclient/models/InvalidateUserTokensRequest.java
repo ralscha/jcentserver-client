@@ -15,11 +15,15 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Request to invalidate all tokens for a user.
  */
+@JsonInclude(Include.NON_EMPTY)
+@SuppressWarnings({ "hiding" })
 public record InvalidateUserTokensRequest(@JsonProperty("user") String user,
 		@JsonProperty("issued_before") Long issuedBefore) {
 
@@ -44,6 +48,9 @@ public record InvalidateUserTokensRequest(@JsonProperty("user") String user,
 		}
 
 		public InvalidateUserTokensRequest build() {
+			if (this.user == null || this.user.trim().isEmpty()) {
+				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
+			}
 			return new InvalidateUserTokensRequest(this.user, this.issuedBefore);
 		}
 

@@ -39,13 +39,15 @@ import ch.rasc.jcentserverclient.models.UnsubscribeResponse;
 public class ClientExample {
 
 	public static void main(String[] args) {
+		String apiKey = "1BdKfKI_r6Krx6OaB65d62DrBUBGeILvADkOeWQRCpkawv8gzogkasgzlIuj6_hD99hZxvTbueJdjUU6PD7dkg";
+
 		// Create client with builder pattern
 		CentrifugoServerApiClient client = CentrifugoServerApiClient
-			.create(config -> config.apiKey("your-centrifugo-api-key").baseUrl("http://localhost:8000/api"));
+			.create(config -> config.apiKey(apiKey).baseUrl("http://localhost:8000/api"));
 
 		// Alternative way to create client
 		Configuration configuration = Configuration.builder()
-			.apiKey("your-centrifugo-api-key")
+			.apiKey(apiKey)
 			.baseUrl("http://localhost:8000/api")
 			.build();
 
@@ -59,6 +61,9 @@ public class ClientExample {
 
 		// Example: Subscribe user to channel
 		subscribeExample(client);
+
+		// Example: List channels
+		listChannelsExample(client);
 
 		// Example: Unsubscribe user from channel
 		unsubscribeExample(client);
@@ -96,6 +101,28 @@ public class ClientExample {
 		}
 	}
 
+	private static void listChannelsExample(CentrifugoServerApiClient client) {
+		System.out.println("=== List Channels Example ===");
+
+		try {
+			// Fetch list of channels
+			var response = client.channels().channels();
+
+			if (response.hasError()) {
+				System.err.println("List channels error: " + response.error().message());
+			}
+			else {
+				System.out.println("Channels:");
+				response.result().channels().forEach((name, info) -> {
+					System.out.println(" - " + name + " (subscribers: " + info.numClients() + ")");
+				});
+			}
+		}
+		catch (ApiException e) {
+			System.err.println("API Exception: " + e.getMessage());
+		}
+	}
+
 	private static void broadcastExample(CentrifugoServerApiClient client) {
 		System.out.println("=== Broadcast Example ===");
 
@@ -119,6 +146,9 @@ public class ClientExample {
 			else {
 				System.out.println("Broadcast sent successfully!");
 				System.out.println("Individual responses: " + response.result().responses().size());
+				for (PublishResponse r : response.result().responses()) {
+					System.out.println(r);
+				}
 			}
 		}
 		catch (ApiException e) {

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Connection state information.
  */
+@SuppressWarnings({ "hiding" })
 public record ConnectionState(@JsonProperty("channels") Map<String, ChannelContext> channels,
 		@JsonProperty("connection_token") ConnectionTokenInfo connectionToken,
 		@JsonProperty("subscription_tokens") Map<String, SubscriptionTokenInfo> subscriptionTokens,

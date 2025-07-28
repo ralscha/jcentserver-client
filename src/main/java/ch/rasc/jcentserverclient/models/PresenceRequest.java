@@ -15,29 +15,21 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Request for getting channel presence information.
  */
+@JsonInclude(Include.NON_EMPTY)
 public record PresenceRequest(@JsonProperty("channel") String channel) {
 
-	public static Builder builder() {
-		return new Builder();
+	public static PresenceRequest of(String channel) {
+		if (channel == null || channel.trim().isEmpty()) {
+			throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+		}
+		return new PresenceRequest(channel);
 	}
 
-	public static class Builder {
-
-		private String channel;
-
-		public Builder channel(String channel) {
-			this.channel = channel;
-			return this;
-		}
-
-		public PresenceRequest build() {
-			return new PresenceRequest(this.channel);
-		}
-
-	}
 }

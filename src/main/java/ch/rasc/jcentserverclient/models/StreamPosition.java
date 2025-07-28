@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Stream position information.
  */
+@SuppressWarnings({ "hiding" })
 public record StreamPosition(@JsonProperty("offset") Long offset, @JsonProperty("epoch") String epoch) {
 
 	public static Builder builder() {

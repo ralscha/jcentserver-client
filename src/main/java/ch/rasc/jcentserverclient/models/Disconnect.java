@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Disconnect object for specifying custom disconnect information.
  */
+@SuppressWarnings({ "hiding" })
 public record Disconnect(@JsonProperty("code") Long code, @JsonProperty("reason") String reason) {
 
 	public static Builder builder() {
@@ -43,6 +44,12 @@ public record Disconnect(@JsonProperty("code") Long code, @JsonProperty("reason"
 		}
 
 		public Disconnect build() {
+			if (this.code == null) {
+				throw new IllegalArgumentException("'code' is required and cannot be null");
+			}
+			if (this.reason == null || this.reason.trim().isEmpty()) {
+				throw new IllegalArgumentException("'reason' is required and cannot be null or empty");
+			}
 			return new Disconnect(this.code, this.reason);
 		}
 

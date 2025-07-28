@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Channel context information.
  */
+@SuppressWarnings({ "hiding" })
 public record ChannelContext(@JsonProperty("source") Long source) {
 
 	public static Builder builder() {

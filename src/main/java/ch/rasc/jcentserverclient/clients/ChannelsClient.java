@@ -20,4 +20,12 @@ public interface ChannelsClient {
 	@Headers("Content-Type: application/json")
 	ChannelsResponse channels(ChannelsRequest request);
 
+	/**
+	 * List all channels without any filters.
+	 * @return the channels response containing all active channels
+	 */
+	default ChannelsResponse channels() {
+		return channels(ChannelsRequest.of(null));
+	}
+
 }
