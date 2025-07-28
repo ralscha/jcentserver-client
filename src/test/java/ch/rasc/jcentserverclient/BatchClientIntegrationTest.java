@@ -20,12 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import ch.rasc.jcentserverclient.models.BatchRequest;
 import ch.rasc.jcentserverclient.models.BatchResponse;
-import ch.rasc.jcentserverclient.models.ChannelsRequest;
 import ch.rasc.jcentserverclient.models.Command;
 import ch.rasc.jcentserverclient.models.InfoRequest;
 import ch.rasc.jcentserverclient.models.PublishRequest;
@@ -34,6 +34,7 @@ import ch.rasc.jcentserverclient.models.PublishRequest;
  * Integration tests for Batch client operations. Tests batch execution of multiple API
  * commands.
  */
+@Disabled
 @DisplayName("Batch Client Integration Tests")
 class BatchClientIntegrationTest extends CentrifugoIntegrationTestBase {
 

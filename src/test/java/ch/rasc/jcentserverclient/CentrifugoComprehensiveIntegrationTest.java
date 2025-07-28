@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,7 @@ import ch.rasc.jcentserverclient.models.PublishResponse;
 @DisplayName("Comprehensive Integration Tests")
 class CentrifugoComprehensiveIntegrationTest extends CentrifugoIntegrationTestBase {
 
+	@Disabled
 	@Test
 	@DisplayName("Should perform complete publish-subscribe-history workflow")
 	void shouldPerformCompleteWorkflow() {

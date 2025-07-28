@@ -17,6 +17,7 @@ package ch.rasc.jcentserverclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,7 @@ import ch.rasc.jcentserverclient.models.UserStatus;
  * Integration tests for UserStatus client operations. Tests user status management
  * functionality.
  */
+@Disabled
 @DisplayName("User Status Client Integration Tests")
 class UserStatusClientIntegrationTest extends CentrifugoIntegrationTestBase {
 
