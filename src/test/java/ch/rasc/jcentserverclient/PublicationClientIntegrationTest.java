@@ -144,7 +144,7 @@ class PublicationClientIntegrationTest extends CentrifugoIntegrationTestBase {
 	}
 
 	@Test
-	@DisplayName("Should handle empty data publication")
+	@DisplayName("Should return error if empty data publication")
 	void shouldHandleEmptyDataPublication() {
 		// Given
 		String channel = "empty-data-channel";
@@ -157,8 +157,8 @@ class PublicationClientIntegrationTest extends CentrifugoIntegrationTestBase {
 
 		// Then
 		assertThat(response).isNotNull();
-		assertThat(response.result()).isNotNull();
-		assertThat(response.error()).isNull();
+		assertThat(response.result()).isNull();
+		assertThat(response.error()).isNotNull();
 	}
 
 }
