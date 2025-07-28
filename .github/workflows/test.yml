@@ -39,6 +39,9 @@ jobs:
         sudo service docker start
         sudo chmod 666 /var/run/docker.sock
         
+    - name: Make Maven wrapper executable
+      run: chmod +x ./mvnw
+        
     - name: Run tests
       run: ./mvnw clean test
       
