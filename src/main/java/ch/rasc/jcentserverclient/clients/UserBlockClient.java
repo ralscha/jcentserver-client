@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.BlockUserRequest;
 import ch.rasc.jcentserverclient.models.BlockUserResponse;
 import ch.rasc.jcentserverclient.models.UnblockUserRequest;
@@ -107,6 +109,65 @@ public interface UserBlockClient {
 	BlockUserResponse blockUser(BlockUserRequest request);
 
 	/**
+	 * Block a user.
+	 *
+	 * <p>
+	 * Blocks a user from connecting to Centrifugo. Once blocked, the user will be
+	 * immediately disconnected if currently connected and will not be able to establish
+	 * new connections until unblocked.
+	 * </p>
+	 *
+	 * <p>
+	 * Blocking features:
+	 * </p>
+	 * <ul>
+	 * <li>Immediate disconnection of existing user connections</li>
+	 * <li>Prevention of new connection attempts</li>
+	 * <li>Optional expiration time for temporary blocks</li>
+	 * <li>Permanent blocking when no expiration is set</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Implementing user bans and suspensions</li>
+	 * <li>Temporary timeouts for misbehavior</li>
+	 * <li>Administrative user management</li>
+	 * <li>Abuse prevention and moderation</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example - permanent block:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * BlockUserRequest request = BlockUserRequest.builder().user("user123").build();
+	 *
+	 * BlockUserResponse response = client.blockUser(request);
+	 * }</pre>
+	 *
+	 * <p>
+	 * Example - temporary block (1 hour):
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * long oneHourFromNow = System.currentTimeMillis() / 1000 + 3600;
+	 * BlockUserRequest request = BlockUserRequest.builder().user("user123")
+	 * 		.expireAt(oneHourFromNow).build();
+	 *
+	 * BlockUserResponse response = client.blockUser(request);
+	 * }</pre>
+	 * @param fn the function to configure the block user request
+	 * @return the block user response
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#block_user">Block User
+	 * Documentation</a>
+	 */
+	default BlockUserResponse blockUser(Function<BlockUserRequest.Builder, BlockUserRequest.Builder> fn) {
+		return this.blockUser(fn.apply(BlockUserRequest.builder()).build());
+	}
+
+	/**
 	 * Unblock a user.
 	 *
 	 * <p>
@@ -140,5 +201,41 @@ public interface UserBlockClient {
 	 */
 	@RequestLine("POST /unblock_user")
 	UnblockUserResponse unblockUser(UnblockUserRequest request);
+
+	/**
+	 * Unblock a user.
+	 *
+	 * <p>
+	 * Removes a block from a user, allowing them to connect to Centrifugo again. This
+	 * immediately restores the user's ability to establish connections.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Ending user suspensions early</li>
+	 * <li>Correcting mistaken blocks</li>
+	 * <li>Administrative user restoration</li>
+	 * <li>Appeal process resolution</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * UnblockUserRequest request = UnblockUserRequest.builder().user("user123").build();
+	 *
+	 * UnblockUserResponse response = client.unblockUser(request);
+	 * }</pre>
+	 * @param user the user to unblock
+	 * @return the unblock user response
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#unblock_user">Unblock
+	 * User Documentation</a>
+	 */
+	default UnblockUserResponse unblockUser(String user) {
+		return this.unblockUser(UnblockUserRequest.of(user));
+	}
 
 }

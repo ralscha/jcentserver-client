@@ -15,6 +15,9 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.List;
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.DeleteUserStatusRequest;
 import ch.rasc.jcentserverclient.models.DeleteUserStatusResponse;
 import ch.rasc.jcentserverclient.models.GetUserStatusRequest;
@@ -160,6 +163,108 @@ public interface UserStatusClient {
 	GetUserStatusResponse getUserStatus(GetUserStatusRequest request);
 
 	/**
+	 * Get user status.
+	 *
+	 * <p>
+	 * Retrieves current status information for one or more users, including their custom
+	 * state, online status, and activity timestamps.
+	 * </p>
+	 *
+	 * <p>
+	 * Returned information includes:
+	 * </p>
+	 * <ul>
+	 * <li>User ID</li>
+	 * <li>Custom state string</li>
+	 * <li>Online timestamp (when user came online)</li>
+	 * <li>Active timestamp (last activity time)</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Displaying user status in UI</li>
+	 * <li>Building user lists with status</li>
+	 * <li>Checking user availability</li>
+	 * <li>Analytics and reporting</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * GetUserStatusRequest request = GetUserStatusRequest.builder()
+	 * 		.users(List.of("user123", "user456")).build();
+	 *
+	 * GetUserStatusResponse response = client.getUserStatus(request);
+	 * for (UserStatus status : response.getResult().getStatuses()) {
+	 * 	System.out.println("User: " + status.getUser() + ", State: "
+	 * 			+ status.getState() + ", Online: " + (status.getOnline() > 0));
+	 * }
+	 * }</pre>
+	 * @param users the users to get status for
+	 * @return the get user status response containing status information
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#get_user_status">Get
+	 * User Status Documentation</a>
+	 */
+	default GetUserStatusResponse getUserStatus(String... users) {
+		return this.getUserStatus(GetUserStatusRequest.of(users));
+	}
+
+	/**
+	 * Get user status.
+	 *
+	 * <p>
+	 * Retrieves current status information for one or more users, including their custom
+	 * state, online status, and activity timestamps.
+	 * </p>
+	 *
+	 * <p>
+	 * Returned information includes:
+	 * </p>
+	 * <ul>
+	 * <li>User ID</li>
+	 * <li>Custom state string</li>
+	 * <li>Online timestamp (when user came online)</li>
+	 * <li>Active timestamp (last activity time)</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Displaying user status in UI</li>
+	 * <li>Building user lists with status</li>
+	 * <li>Checking user availability</li>
+	 * <li>Analytics and reporting</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * GetUserStatusRequest request = GetUserStatusRequest.builder()
+	 * 		.users(List.of("user123", "user456")).build();
+	 *
+	 * GetUserStatusResponse response = client.getUserStatus(request);
+	 * for (UserStatus status : response.getResult().getStatuses()) {
+	 * 	System.out.println("User: " + status.getUser() + ", State: "
+	 * 			+ status.getState() + ", Online: " + (status.getOnline() > 0));
+	 * }
+	 * }</pre>
+	 * @param users the users to get status for
+	 * @return the get user status response containing status information
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#get_user_status">Get
+	 * User Status Documentation</a>
+	 */
+	default GetUserStatusResponse getUserStatus(List<String> users) {
+		return this.getUserStatus(GetUserStatusRequest.of(users));
+	}
+
+	/**
 	 * Delete user status.
 	 *
 	 * <p>
@@ -195,5 +300,81 @@ public interface UserStatusClient {
 	 */
 	@RequestLine("POST /delete_user_status")
 	DeleteUserStatusResponse deleteUserStatus(DeleteUserStatusRequest request);
+
+	/**
+	 * Delete user status.
+	 *
+	 * <p>
+	 * Removes status information for one or more users. This clears their custom state
+	 * and activity tracking data from the system.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>User account cleanup</li>
+	 * <li>Privacy compliance (data deletion)</li>
+	 * <li>Resetting user status</li>
+	 * <li>Administrative operations</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * DeleteUserStatusRequest request = DeleteUserStatusRequest.builder()
+	 * 		.users(List.of("user123", "user456")).build();
+	 *
+	 * DeleteUserStatusResponse response = client.deleteUserStatus(request);
+	 * }</pre>
+	 * @param users the users to delete status for
+	 * @return the delete user status response
+	 * @see <a href=
+	 * "https://centrifugal.dev/docs/server/server_api#delete_user_status">Delete User
+	 * Status Documentation</a>
+	 */
+	default DeleteUserStatusResponse deleteUserStatus(String... users) {
+		return this.deleteUserStatus(DeleteUserStatusRequest.of(users));
+	}
+
+	/**
+	 * Delete user status.
+	 *
+	 * <p>
+	 * Removes status information for one or more users. This clears their custom state
+	 * and activity tracking data from the system.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>User account cleanup</li>
+	 * <li>Privacy compliance (data deletion)</li>
+	 * <li>Resetting user status</li>
+	 * <li>Administrative operations</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * DeleteUserStatusRequest request = DeleteUserStatusRequest.builder()
+	 * 		.users(List.of("user123", "user456")).build();
+	 *
+	 * DeleteUserStatusResponse response = client.deleteUserStatus(request);
+	 * }</pre>
+	 * @param users the users to delete status for
+	 * @return the delete user status response
+	 * @see <a href=
+	 * "https://centrifugal.dev/docs/server/server_api#delete_user_status">Delete User
+	 * Status Documentation</a>
+	 */
+	default DeleteUserStatusResponse deleteUserStatus(List<String> users) {
+		return this.deleteUserStatus(DeleteUserStatusRequest.of(users));
+	}
 
 }

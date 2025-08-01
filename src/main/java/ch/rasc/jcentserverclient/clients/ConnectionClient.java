@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.DisconnectRequest;
 import ch.rasc.jcentserverclient.models.DisconnectResponse;
 import ch.rasc.jcentserverclient.models.RefreshRequest;
@@ -108,6 +110,57 @@ public interface ConnectionClient {
 	SubscribeResponse subscribe(SubscribeRequest request);
 
 	/**
+	 * Subscribe a user to a channel.
+	 *
+	 * <p>
+	 * Creates a server-side subscription for a user to a specific channel. This is not a
+	 * real-time streaming subscription request, but a command to subscribe online user
+	 * sessions to a channel from the server side.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Dynamic server-side subscriptions</li>
+	 * <li>Auto-subscribing users to relevant channels</li>
+	 * <li>Subscription with custom channel info</li>
+	 * <li>Recovery from specific stream positions</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Features:
+	 * </p>
+	 * <ul>
+	 * <li>Custom subscription data and info</li>
+	 * <li>Channel option overrides (presence, join/leave, etc.)</li>
+	 * <li>Stream position recovery</li>
+	 * <li>Client or session-specific targeting</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * SubscribeRequest request = SubscribeRequest.builder().user("user123")
+	 * 		.channel("notifications:user123").info(Map.of("role", "subscriber"))
+	 * 		.build();
+	 *
+	 * SubscribeResponse response = client.subscribe(request);
+	 * }</pre>
+	 * @param fn the function to configure the subscribe request
+	 * @return the subscribe response
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#subscribe">Subscribe
+	 * Documentation</a>
+	 * @see <a href="https://centrifugal.dev/docs/server/server_subs">Server-side
+	 * Subscriptions</a>
+	 */
+	default SubscribeResponse subscribe(Function<SubscribeRequest.Builder, SubscribeRequest.Builder> fn) {
+		return this.subscribe(fn.apply(SubscribeRequest.builder()).build());
+	}
+
+	/**
 	 * Unsubscribe a user from a channel.
 	 *
 	 * <p>
@@ -143,6 +196,43 @@ public interface ConnectionClient {
 	 */
 	@RequestLine("POST /unsubscribe")
 	UnsubscribeResponse unsubscribe(UnsubscribeRequest request);
+
+	/**
+	 * Unsubscribe a user from a channel.
+	 *
+	 * <p>
+	 * Removes a user's subscription to a specific channel. Can target all user
+	 * connections or specific client/session connections.
+	 * </p>
+	 *
+	 * <p>
+	 * Targeting options:
+	 * </p>
+	 * <ul>
+	 * <li>All user connections (by user ID only)</li>
+	 * <li>Specific client connection</li>
+	 * <li>Specific session</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * UnsubscribeRequest request = UnsubscribeRequest.builder().user("user123")
+	 * 		.channel("notifications:user123").build();
+	 *
+	 * UnsubscribeResponse response = client.unsubscribe(request);
+	 * }</pre>
+	 * @param fn the function to configure the unsubscribe request
+	 * @return the unsubscribe response
+	 * @see <a href=
+	 * "https://centrifugal.dev/docs/server/server_api#unsubscribe">Unsubscribe
+	 * Documentation</a>
+	 */
+	default UnsubscribeResponse unsubscribe(Function<UnsubscribeRequest.Builder, UnsubscribeRequest.Builder> fn) {
+		return this.unsubscribe(fn.apply(UnsubscribeRequest.builder()).build());
+	}
 
 	/**
 	 * Disconnect a user.
@@ -187,6 +277,48 @@ public interface ConnectionClient {
 	DisconnectResponse disconnect(DisconnectRequest request);
 
 	/**
+	 * Disconnect a user.
+	 *
+	 * <p>
+	 * Forcibly disconnects user connections from the server. Useful for implementing user
+	 * bans, session management, or forcing re-authentication.
+	 * </p>
+	 *
+	 * <p>
+	 * Disconnect targeting:
+	 * </p>
+	 * <ul>
+	 * <li>All user connections</li>
+	 * <li>Specific client connection</li>
+	 * <li>Specific session</li>
+	 * <li>All except whitelisted clients</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Supports custom disconnect codes and reasons for client-side handling.
+	 * </p>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * DisconnectRequest request = DisconnectRequest.builder().user("user123")
+	 * 		.disconnect(Disconnect.builder().code(4000).reason("User banned").build())
+	 * 		.build();
+	 *
+	 * DisconnectResponse response = client.disconnect(request);
+	 * }</pre>
+	 * @param fn the function to configure the disconnect request
+	 * @return the disconnect response
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#disconnect">Disconnect
+	 * Documentation</a>
+	 */
+	default DisconnectResponse disconnect(Function<DisconnectRequest.Builder, DisconnectRequest.Builder> fn) {
+		return this.disconnect(fn.apply(DisconnectRequest.builder()).build());
+	}
+
+	/**
 	 * Refresh a user connection.
 	 *
 	 * <p>
@@ -223,5 +355,44 @@ public interface ConnectionClient {
 	 */
 	@RequestLine("POST /refresh")
 	RefreshResponse refresh(RefreshRequest request);
+
+	/**
+	 * Refresh a user connection.
+	 *
+	 * <p>
+	 * Refreshes user connections, primarily useful for unidirectional transports or when
+	 * you need to update connection metadata. Can mark connections as expired or set new
+	 * expiration times.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Refreshing unidirectional transport connections</li>
+	 * <li>Updating connection expiration times</li>
+	 * <li>Marking connections as expired</li>
+	 * <li>Triggering connection state updates</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * RefreshRequest request = RefreshRequest.builder().user("user123")
+	 * 		.expireAt(System.currentTimeMillis() / 1000 + 3600) // 1 hour from now
+	 * 		.build();
+	 *
+	 * RefreshResponse response = client.refresh(request);
+	 * }</pre>
+	 * @param fn the function to configure the refresh request
+	 * @return the refresh response
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#refresh">Refresh
+	 * Documentation</a>
+	 */
+	default RefreshResponse refresh(Function<RefreshRequest.Builder, RefreshRequest.Builder> fn) {
+		return this.refresh(fn.apply(RefreshRequest.builder()).build());
+	}
 
 }

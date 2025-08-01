@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.ChannelsRequest;
 import ch.rasc.jcentserverclient.models.ChannelsResponse;
 import ch.rasc.jcentserverclient.models.ConnectionsRequest;
@@ -115,6 +117,70 @@ public interface StatsClient {
 	ChannelsResponse channels(ChannelsRequest request);
 
 	/**
+	 * Get active channels information.
+	 *
+	 * <p>
+	 * Returns information about all currently active channels (channels with one or more
+	 * active subscribers). Can be filtered using glob patterns to match specific channel
+	 * names.
+	 * </p>
+	 *
+	 * <p>
+	 * Channel information includes:
+	 * </p>
+	 * <ul>
+	 * <li>Channel name</li>
+	 * <li>Number of currently connected clients</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Monitoring active channels</li>
+	 * <li>Building channel browsers</li>
+	 * <li>Administrative dashboards</li>
+	 * <li>Debugging subscription issues</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * <strong>Warning:</strong> For large deployments with many active channels (>10k),
+	 * this operation can be expensive. Consider using real-time analytics approaches for
+	 * massive setups.
+	 * </p>
+	 *
+	 * <p>
+	 * Example - get all channels:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * ChannelsRequest request = ChannelsRequest.builder().build();
+	 * ChannelsResponse response = client.channels(request);
+	 * }</pre>
+	 *
+	 * <p>
+	 * Example - filter channels by pattern:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * ChannelsRequest request = ChannelsRequest.builder().pattern("chat:*") // Only
+	 * 																		// channels
+	 * 																		// starting
+	 * 																		// with
+	 * 																		// "chat:"
+	 * 		.build();
+	 * ChannelsResponse response = client.channels(request);
+	 * }</pre>
+	 * @param pattern the pattern to filter channels
+	 * @return the channels response containing active channels and their client counts
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#channels">Channels
+	 * Documentation</a>
+	 */
+	default ChannelsResponse channels(String pattern) {
+		return this.channels(ChannelsRequest.of(pattern));
+	}
+
+	/**
 	 * Get connections information.
 	 *
 	 * <p>
@@ -172,6 +238,63 @@ public interface StatsClient {
 	ConnectionsResponse connections(ConnectionsRequest request);
 
 	/**
+	 * Get connections information.
+	 *
+	 * <p>
+	 * Returns information about currently connected clients. Can filter connections by
+	 * user ID or use expressions for more complex filtering.
+	 * </p>
+	 *
+	 * <p>
+	 * Connection information includes:
+	 * </p>
+	 * <ul>
+	 * <li>Client ID and user ID</li>
+	 * <li>Connection metadata and state</li>
+	 * <li>Subscribed channels</li>
+	 * <li>Connection and subscription tokens</li>
+	 * <li>Application name and version</li>
+	 * <li>Transport and protocol information</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Monitoring user connections</li>
+	 * <li>Debugging connection issues</li>
+	 * <li>Administrative user management</li>
+	 * <li>Session auditing and analysis</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example - get all connections:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * ConnectionsRequest request = ConnectionsRequest.builder().build();
+	 * ConnectionsResponse response = client.connections(request);
+	 * }</pre>
+	 *
+	 * <p>
+	 * Example - get connections for specific user:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * ConnectionsRequest request = ConnectionsRequest.builder().user("user123").build();
+	 * ConnectionsResponse response = client.connections(request);
+	 * }</pre>
+	 * @param fn the function to configure the connections request
+	 * @return the connections response containing matching connection information
+	 * @see <a href=
+	 * "https://centrifugal.dev/docs/server/server_api#connections">Connections
+	 * Documentation</a>
+	 */
+	default ConnectionsResponse connections(Function<ConnectionsRequest.Builder, ConnectionsRequest.Builder> fn) {
+		return this.connections(fn.apply(ConnectionsRequest.builder()).build());
+	}
+
+	/**
 	 * Get server information.
 	 *
 	 * <p>
@@ -222,5 +345,58 @@ public interface StatsClient {
 	 */
 	@RequestLine("POST /info")
 	InfoResponse info(InfoRequest request);
+
+	/**
+	 * Get server information.
+	 *
+	 * <p>
+	 * Returns detailed information about all Centrifugo nodes in the cluster, including
+	 * performance metrics, version information, and runtime statistics.
+	 * </p>
+	 *
+	 * <p>
+	 * Node information includes:
+	 * </p>
+	 * <ul>
+	 * <li>Node ID, name, and version</li>
+	 * <li>Uptime and process information</li>
+	 * <li>Number of clients, users, and channels</li>
+	 * <li>Number of subscriptions</li>
+	 * <li>Performance metrics (CPU, memory)</li>
+	 * <li>Custom metrics if configured</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Health monitoring and alerting</li>
+	 * <li>Performance analysis</li>
+	 * <li>Cluster management</li>
+	 * <li>Capacity planning</li>
+	 * <li>Administrative dashboards</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * InfoRequest request = InfoRequest.builder().build();
+	 * InfoResponse response = client.info(request);
+	 *
+	 * for (NodeResult node : response.getResult().getNodes()) {
+	 * 	System.out.println("Node: " + node.getName() + ", Clients: "
+	 * 			+ node.getNumClients() + ", Uptime: " + node.getUptime());
+	 * }
+	 * }</pre>
+	 * @param fn the function to configure the info request
+	 * @return the info response containing information about all cluster nodes
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#info">Info
+	 * Documentation</a>
+	 */
+	default InfoResponse info(Function<InfoRequest.Builder, InfoRequest.Builder> fn) {
+		return this.info(fn.apply(InfoRequest.builder()).build());
+	}
 
 }

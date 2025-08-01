@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.InfoRequest;
 import ch.rasc.jcentserverclient.models.InfoResponse;
 import feign.Headers;
@@ -33,5 +35,14 @@ public interface UserManagementClient {
 	 */
 	@RequestLine("POST /info")
 	InfoResponse info(InfoRequest request);
+
+	/**
+	 * Get information about connections.
+	 * @param fn the function to configure the info request
+	 * @return the info response containing connection information
+	 */
+	default InfoResponse info(Function<InfoRequest.Builder, InfoRequest.Builder> fn) {
+		return this.info(fn.apply(InfoRequest.builder()).build());
+	}
 
 }

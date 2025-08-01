@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.BroadcastRequest;
 import ch.rasc.jcentserverclient.models.BroadcastResponse;
 import ch.rasc.jcentserverclient.models.PublishRequest;
@@ -91,6 +93,46 @@ public interface PublicationClient {
 	PublishResponse publish(PublishRequest request);
 
 	/**
+	 * Publish data into a channel.
+	 *
+	 * <p>
+	 * Sends data to all clients currently subscribed to the specified channel. This is
+	 * the most commonly used operation for real-time messaging.
+	 * </p>
+	 *
+	 * <p>
+	 * Features:
+	 * </p>
+	 * <ul>
+	 * <li>JSON or binary data support</li>
+	 * <li>Optional history storage control</li>
+	 * <li>Publication tags for metadata</li>
+	 * <li>Idempotency keys for retry safety</li>
+	 * <li>Delta updates for efficiency</li>
+	 * <li>Version control for document state</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * PublishRequest request = PublishRequest.builder().channel("chat:room1")
+	 * 		.data(Map.of("message", "Hello, World!", "user", "alice"))
+	 * 		.tags(Map.of("type", "message")).build();
+	 *
+	 * PublishResponse response = client.publish(request);
+	 * }</pre>
+	 * @param fn the function to configure the publish request
+	 * @return the publish response containing publication offset and epoch
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#publish">Publish
+	 * Documentation</a>
+	 */
+	default PublishResponse publish(Function<PublishRequest.Builder, PublishRequest.Builder> fn) {
+		return this.publish(fn.apply(PublishRequest.builder()).build());
+	}
+
+	/**
 	 * Broadcast data to multiple channels.
 	 *
 	 * <p>
@@ -128,5 +170,45 @@ public interface PublicationClient {
 	 */
 	@RequestLine("POST /broadcast")
 	BroadcastResponse broadcast(BroadcastRequest request);
+
+	/**
+	 * Broadcast data to multiple channels.
+	 *
+	 * <p>
+	 * Efficiently sends the same data to multiple channels in a single operation. This is
+	 * more efficient than making multiple individual publish calls when you need to send
+	 * identical data to several channels.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Sending notifications to multiple user channels</li>
+	 * <li>Broadcasting system announcements</li>
+	 * <li>Synchronizing data across related channels</li>
+	 * <li>Fan-out messaging patterns</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * BroadcastRequest request = BroadcastRequest.builder()
+	 * 		.channels(List.of("user:123", "user:456", "user:789"))
+	 * 		.data(Map.of("notification", "System maintenance in 5 minutes")).build();
+	 *
+	 * BroadcastResponse response = client.broadcast(request);
+	 * }</pre>
+	 * @param fn the function to configure the broadcast request
+	 * @return the broadcast response containing individual publish results for each
+	 * channel
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#broadcast">Broadcast
+	 * Documentation</a>
+	 */
+	default BroadcastResponse broadcast(Function<BroadcastRequest.Builder, BroadcastRequest.Builder> fn) {
+		return this.broadcast(fn.apply(BroadcastRequest.builder()).build());
+	}
 
 }

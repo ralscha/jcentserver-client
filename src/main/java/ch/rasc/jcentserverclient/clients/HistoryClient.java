@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.clients;
 
+import java.util.function.Function;
+
 import ch.rasc.jcentserverclient.models.HistoryRemoveRequest;
 import ch.rasc.jcentserverclient.models.HistoryRemoveResponse;
 import ch.rasc.jcentserverclient.models.HistoryRequest;
@@ -117,6 +119,71 @@ public interface HistoryClient {
 	HistoryResponse history(HistoryRequest request);
 
 	/**
+	 * Get channel history.
+	 *
+	 * <p>
+	 * Retrieves message history for a specific channel. By default, if no limit parameter
+	 * is set, only current stream position information is returned (offset and epoch). To
+	 * get actual publications, you must explicitly provide a limit parameter.
+	 * </p>
+	 *
+	 * <p>
+	 * Features:
+	 * </p>
+	 * <ul>
+	 * <li>Pagination with limit parameter</li>
+	 * <li>Stream position-based iteration</li>
+	 * <li>Reverse chronological ordering</li>
+	 * <li>Current stream position metadata</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Loading chat history for new participants</li>
+	 * <li>Implementing message recovery</li>
+	 * <li>Building message pagination</li>
+	 * <li>Synchronizing client state</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example for getting recent messages:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * HistoryRequest request = HistoryRequest.builder().channel("chat:room1").limit(50)
+	 * 		.reverse(true) // Get latest messages first
+	 * 		.build();
+	 *
+	 * HistoryResponse response = client.history(request);
+	 * }</pre>
+	 *
+	 * <p>
+	 * Example for pagination:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * HistoryRequest request = HistoryRequest.builder().channel("chat:room1").limit(20)
+	 * 		.since(StreamPosition.builder().offset(100).epoch("abc123").build())
+	 * 		.build();
+	 *
+	 * HistoryResponse response = client.history(request);
+	 * }</pre>
+	 * @param fn the function to configure the history request
+	 * @return the history response containing publications and stream position
+	 * information
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api#history">History
+	 * Documentation</a>
+	 * @see <a href=
+	 * "https://centrifugal.dev/docs/server/history_and_recovery#history-iteration-api">History
+	 * Iteration API</a>
+	 */
+	default HistoryResponse history(Function<HistoryRequest.Builder, HistoryRequest.Builder> fn) {
+		return this.history(fn.apply(HistoryRequest.builder()).build());
+	}
+
+	/**
 	 * Remove channel history.
 	 *
 	 * <p>
@@ -163,5 +230,54 @@ public interface HistoryClient {
 	 */
 	@RequestLine("POST /history_remove")
 	HistoryRemoveResponse historyRemove(HistoryRemoveRequest request);
+
+	/**
+	 * Remove channel history.
+	 *
+	 * <p>
+	 * Removes all publications from channel history while keeping the current stream
+	 * position metadata intact. This prevents client disconnects due to insufficient
+	 * state while clearing historical data.
+	 * </p>
+	 *
+	 * <p>
+	 * Use cases:
+	 * </p>
+	 * <ul>
+	 * <li>Implementing message retention policies</li>
+	 * <li>Clearing sensitive historical data</li>
+	 * <li>Maintaining history storage limits</li>
+	 * <li>Channel cleanup operations</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Important notes:
+	 * </p>
+	 * <ul>
+	 * <li>Only publications are removed, stream metadata is preserved</li>
+	 * <li>Connected clients will not be disconnected</li>
+	 * <li>New publications continue normally after removal</li>
+	 * <li>Operation cannot be undone</li>
+	 * </ul>
+	 *
+	 * <p>
+	 * Example:
+	 * </p>
+	 *
+	 * <pre>{@code
+	 * HistoryRemoveRequest request = HistoryRemoveRequest.builder().channel("chat:room1")
+	 * 		.build();
+	 *
+	 * HistoryRemoveResponse response = client.historyRemove(request);
+	 * }</pre>
+	 * @param channel the channel to remove history from
+	 * @return the history remove response
+	 * @see <a href=
+	 * "https://centrifugal.dev/docs/server/server_api#history_remove">History Remove
+	 * Documentation</a>
+	 */
+	default HistoryRemoveResponse historyRemove(String channel) {
+		return this.historyRemove(HistoryRemoveRequest.of(channel));
+	}
 
 }
