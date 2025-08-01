@@ -28,7 +28,6 @@ import ch.rasc.jcentserverclient.clients.PublicationClient;
 import ch.rasc.jcentserverclient.clients.StatsClient;
 import ch.rasc.jcentserverclient.clients.TokenClient;
 import ch.rasc.jcentserverclient.clients.UserBlockClient;
-import ch.rasc.jcentserverclient.clients.UserStatusClient;
 import feign.Feign;
 import feign.Feign.Builder;
 import feign.RequestInterceptor;
@@ -96,9 +95,6 @@ public class CentrifugoServerApiClient {
 	// User block API endpoints
 	private UserBlockClient userBlock;
 
-	// User status API endpoints
-	private UserStatusClient userStatus;
-
 	// Token API endpoints
 	public TokenClient token;
 
@@ -158,9 +154,6 @@ public class CentrifugoServerApiClient {
 
 		client.userBlock = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(UserBlockClient.class, baseUrl);
-
-		client.userStatus = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
-			.target(UserStatusClient.class, baseUrl);
 
 		client.token = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(TokenClient.class, baseUrl);
@@ -298,26 +291,6 @@ public class CentrifugoServerApiClient {
 	 */
 	public UserBlockClient userBlock() {
 		return this.userBlock;
-	}
-
-	/**
-	 * Get the User Status API client for managing user status information.
-	 *
-	 * <p>
-	 * Supports operations like:
-	 * </p>
-	 * <ul>
-	 * <li>Updating user status</li>
-	 * <li>Getting user status</li>
-	 * <li>Deleting user status</li>
-	 * </ul>
-	 * @return the user status client
-	 * @see <a href=
-	 * "https://centrifugal.dev/docs/server/server_api#update_user_status">User Status API
-	 * Documentation</a>
-	 */
-	public UserStatusClient userStatus() {
-		return this.userStatus;
 	}
 
 	/**

@@ -20,20 +20,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import ch.rasc.jcentserverclient.models.BroadcastRequest;
 import ch.rasc.jcentserverclient.models.BroadcastResponse;
-import ch.rasc.jcentserverclient.models.ChannelsRequest;
-import ch.rasc.jcentserverclient.models.ChannelsResponse;
 import ch.rasc.jcentserverclient.models.HistoryRequest;
 import ch.rasc.jcentserverclient.models.HistoryResponse;
 import ch.rasc.jcentserverclient.models.InfoRequest;
 import ch.rasc.jcentserverclient.models.InfoResponse;
-import ch.rasc.jcentserverclient.models.PresenceStatsRequest;
-import ch.rasc.jcentserverclient.models.PresenceStatsResponse;
 import ch.rasc.jcentserverclient.models.PublishRequest;
 import ch.rasc.jcentserverclient.models.PublishResponse;
 
@@ -43,65 +38,6 @@ import ch.rasc.jcentserverclient.models.PublishResponse;
  */
 @DisplayName("Comprehensive Integration Tests")
 class CentrifugoComprehensiveIntegrationTest extends CentrifugoIntegrationTestBase {
-
-	@Disabled
-	@Test
-	@DisplayName("Should perform complete publish-subscribe-history workflow")
-	void shouldPerformCompleteWorkflow() {
-		// Given
-		String channel = "comprehensive-test-channel";
-		Map<String, Object> messageData = Map.of("user", "test-user", "message", "Hello from comprehensive test",
-				"timestamp", System.currentTimeMillis());
-
-		// When - Step 1: Publish message
-		PublishRequest publishRequest = PublishRequest.builder().channel(channel).data(messageData).build();
-
-		PublishResponse publishResponse = this.client.publication().publish(publishRequest);
-
-		// Then - Verify publish succeeded
-		assertThat(publishResponse).isNotNull();
-		assertThat(publishResponse.result()).isNotNull();
-		assertThat(publishResponse.error()).isNull();
-
-		// When - Step 2: Check channel exists in channels list
-		ChannelsResponse channelsResponse = this.client.channels().channels();
-
-		// Then - Verify channels response
-		assertThat(channelsResponse).isNotNull();
-		assertThat(channelsResponse.result()).isNotNull();
-		assertThat(channelsResponse.error()).isNull();
-
-		// When - Step 3: Get channel history
-		HistoryRequest historyRequest = HistoryRequest.builder().channel(channel).build();
-
-		HistoryResponse historyResponse = this.client.history().history(historyRequest);
-
-		// Then - Verify history contains our message
-		assertThat(historyResponse).isNotNull();
-		assertThat(historyResponse.result()).isNotNull();
-		assertThat(historyResponse.result().publications()).isNotEmpty();
-		assertThat(historyResponse.error()).isNull();
-
-		// When - Step 4: Check presence stats
-		PresenceStatsRequest presenceStatsRequest = PresenceStatsRequest.of(channel);
-
-		PresenceStatsResponse presenceStatsResponse = this.client.presence().presenceStats(presenceStatsRequest);
-
-		// Then - Verify presence stats
-		assertThat(presenceStatsResponse).isNotNull();
-		assertThat(presenceStatsResponse.result()).isNotNull();
-		assertThat(presenceStatsResponse.error()).isNull();
-
-		// When - Step 5: Get server stats
-		InfoRequest statsRequest = InfoRequest.builder().build();
-		InfoResponse statsResponse = this.client.stats().info(statsRequest);
-
-		// Then - Verify server stats
-		assertThat(statsResponse).isNotNull();
-		assertThat(statsResponse.result()).isNotNull();
-		assertThat(statsResponse.result().nodes()).isNotEmpty();
-		assertThat(statsResponse.error()).isNull();
-	}
 
 	@Test
 	@DisplayName("Should handle multiple channel broadcast and verification")

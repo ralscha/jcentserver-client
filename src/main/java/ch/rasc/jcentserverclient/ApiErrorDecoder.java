@@ -23,8 +23,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import feign.Response.Body;
 import feign.Response;
+import feign.Response.Body;
 import feign.codec.ErrorDecoder;
 
 /**

@@ -1,6 +1,6 @@
 # Centrifugo Java Client
 
-An unofficial Java client for the [Centrifugo](https://centrifugal.dev/) server HTTP API, built using OpenFeign with a builder pattern for easy and fluent API usage.
+An unofficial Java client for the [Centrifugo](https://centrifugal.dev/) server HTTP API.
 
 ## Features
 
@@ -55,25 +55,43 @@ if (!response.hasError()) {
 
 The client is organized into different categories based on Centrifugo's API structure:
 
-### Publication API (`client.publication`)
+### Publication API (`client.publication()`)
 - `publish()` - Publish data into a channel
 - `broadcast()` - Broadcast data to multiple channels
 
-### Connection Management API (`client.connection`)
+### Connection Management API (`client.connection()`)
 - `subscribe()` - Subscribe user to a channel
 - `unsubscribe()` - Unsubscribe user from a channel
 - `disconnect()` - Disconnect user
 - `refresh()` - Refresh user connection
 
-### Additional APIs (Coming Soon)
-- `client.history` - Channel history operations
-- `client.presence` - Presence information
-- `client.stats` - Server statistics
-- `client.userStatus` - User status management
-- `client.userBlock` - User blocking/unblocking
-- `client.token` - Token management
-- `client.pushNotification` - Push notifications
-- `client.batch` - Batch operations
+### History API (`client.history()`)
+- `history()` - Retrieve channel message history
+- `historyRemove()` - Remove channel history
+
+### Presence API (`client.presence()`)
+- `presence()` - Get channel presence information (all connected clients)
+- `presenceStats()` - Get channel presence statistics (counts only)
+
+### Stats API (`client.stats()`)
+- `channels()` - Get active channels information
+- `connections()` - Get connections information  
+- `info()` - Get server node information
+
+### Channels API (`client.channels()`)
+- `channels()` - Get active channels information (alias for stats.channels)
+
+### User Block API (`client.userBlock()`)
+- `blockUser()` - Block a user
+- `unblockUser()` - Unblock a user
+
+### Token API (`client.token()`)
+- `revokeToken()` - Revoke individual tokens
+- `invalidateUserTokens()` - Invalidate all user tokens
+
+### Batch API (`client.batch()`)
+- `batch()` - Send multiple commands in a single request
+
 
 ## Examples
 
@@ -163,19 +181,6 @@ try {
 }
 ```
 
-## Builder Pattern
-
-All request models support the builder pattern for fluent API usage:
-
-```java
-PublishRequest request = PublishRequest.builder()
-    .channel("chat:general")
-    .data(messageData)
-    .skipHistory(true)
-    .tags(Map.of("priority", "high"))
-    .idempotencyKey("unique-key-123")
-    .build();
-```
 
 ## Requirements
 
