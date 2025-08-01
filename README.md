@@ -1,4 +1,4 @@
-"# Centrifugo Java Client
+# Centrifugo Java Client
 
 An unofficial Java client for the [Centrifugo](https://centrifugal.dev/) server HTTP API, built using OpenFeign with a builder pattern for easy and fluent API usage.
 
@@ -19,7 +19,7 @@ Add the dependency to your `pom.xml`:
 <dependency>
     <groupId>ch.rasc</groupId>
     <artifactId>jcentserver-client</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -33,7 +33,7 @@ import ch.rasc.jcentserverclient.model.PublishResponse;
 // Create client with builder pattern
 CentrifugoServerApiClient client = CentrifugoServerApiClient.create(config -> 
     config.apiKey("your-centrifugo-api-key")
-          .baseUrl("http://localhost:8000/api") // Optional
+          .baseUrl("http://localhost:8000/api")
 );
 
 // Publish a message to a channel
@@ -180,7 +180,7 @@ PublishRequest request = PublishRequest.builder()
 ## Requirements
 
 - Java 17 or higher
-- Centrifugo server with HTTP API enabled
+- Centrifugo server with HTTP Server API enabled
 
 ## Authentication
 
