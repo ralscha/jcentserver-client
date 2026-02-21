@@ -18,10 +18,8 @@ package ch.rasc.jcentserverclient;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 import feign.Response;
 import feign.Response.Body;
@@ -34,7 +32,7 @@ public class ApiErrorDecoder implements feign.codec.ErrorDecoder {
 
 	private final ErrorDecoder.Default delegate = new ErrorDecoder.Default();
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override
 	public Exception decode(String methodKey, Response response) {
@@ -45,19 +43,10 @@ public class ApiErrorDecoder implements feign.codec.ErrorDecoder {
 			responseBody = new String(inputStream.readAllBytes());
 
 			if (!responseBody.trim().isEmpty()) {
-				JsonFactory factory = this.objectMapper.getFactory();
-				try (JsonParser parser = factory.createParser(responseBody)) {
-					if (parser.nextToken() == JsonToken.START_OBJECT) {
-						while (parser.nextToken() != JsonToken.END_OBJECT) {
-							String fieldName = parser.currentName();
-							if ("error".equals(fieldName)) {
-								parser.nextToken();
-								error = this.objectMapper.readValue(parser, ApiError.class);
-								break;
-							}
-							parser.skipChildren();
-						}
-					}
+				JsonNode root = this.jsonMapper.readTree(responseBody);
+				JsonNode errorNode = root.get("error");
+				if (errorNode != null && !errorNode.isNull()) {
+					error = this.jsonMapper.treeToValue(errorNode, ApiError.class);
 				}
 			}
 		}

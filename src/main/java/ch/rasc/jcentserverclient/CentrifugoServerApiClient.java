@@ -31,8 +31,8 @@ import ch.rasc.jcentserverclient.clients.UserBlockClient;
 import feign.Feign;
 import feign.Feign.Builder;
 import feign.RequestInterceptor;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
+import feign.jackson3.Jackson3Decoder;
+import feign.jackson3.Jackson3Encoder;
 
 /**
  * Centrifugo Server HTTP API Client
@@ -118,8 +118,8 @@ public class CentrifugoServerApiClient {
 	public static CentrifugoServerApiClient create(Configuration configuration) {
 
 		CentrifugoServerApiClient client = new CentrifugoServerApiClient();
-		JacksonDecoder jsonDecoder = new JacksonDecoder();
-		JacksonEncoder jsonEncoder = new JacksonEncoder();
+		Jackson3Decoder jsonDecoder = new Jackson3Decoder();
+		Jackson3Encoder jsonEncoder = new Jackson3Encoder();
 
 		List<RequestInterceptor> interceptors = new ArrayList<>();
 
@@ -326,8 +326,8 @@ public class CentrifugoServerApiClient {
 		return this.batch;
 	}
 
-	private static Builder jsonClientBuilder(Configuration configuration, JacksonDecoder jsonDecoder,
-			JacksonEncoder jsonEncoder, List<RequestInterceptor> interceptors) {
+	private static Builder jsonClientBuilder(Configuration configuration, Jackson3Decoder jsonDecoder,
+			Jackson3Encoder jsonEncoder, List<RequestInterceptor> interceptors) {
 		return Feign.builder()
 			.client(configuration.client())
 			.errorDecoder(configuration.errorDecoder())
