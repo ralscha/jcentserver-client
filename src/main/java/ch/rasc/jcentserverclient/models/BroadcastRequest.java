@@ -30,7 +30,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record BroadcastRequest(@JsonProperty("channels") List<String> channels, @JsonProperty("data") Object data,
 		@JsonProperty("b64data") String b64data, @JsonProperty("skip_history") Boolean skipHistory,
 		@JsonProperty("tags") Map<String, String> tags, @JsonProperty("idempotency_key") String idempotencyKey,
-		@JsonProperty("delta") Boolean delta) {
+		@JsonProperty("delta") Boolean delta, @JsonProperty("version") Long version,
+		@JsonProperty("version_epoch") String versionEpoch) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -51,6 +52,10 @@ public record BroadcastRequest(@JsonProperty("channels") List<String> channels, 
 		private String idempotencyKey;
 
 		private Boolean delta;
+
+		private Long version;
+
+		private String versionEpoch;
 
 		public Builder channels(List<String> channels) {
 			this.channels = List.copyOf(channels);
@@ -92,6 +97,16 @@ public record BroadcastRequest(@JsonProperty("channels") List<String> channels, 
 			return this;
 		}
 
+		public Builder version(Long version) {
+			this.version = version;
+			return this;
+		}
+
+		public Builder versionEpoch(String versionEpoch) {
+			this.versionEpoch = versionEpoch;
+			return this;
+		}
+
 		public BroadcastRequest build() {
 			if (this.channels == null || this.channels.isEmpty()) {
 				throw new IllegalArgumentException("'channels' is required and cannot be null or empty");
@@ -100,7 +115,7 @@ public record BroadcastRequest(@JsonProperty("channels") List<String> channels, 
 				throw new IllegalArgumentException("'data' is required and cannot be null");
 			}
 			return new BroadcastRequest(this.channels, this.data, this.b64data, this.skipHistory, this.tags,
-					this.idempotencyKey, this.delta);
+					this.idempotencyKey, this.delta, this.version, this.versionEpoch);
 		}
 
 	}

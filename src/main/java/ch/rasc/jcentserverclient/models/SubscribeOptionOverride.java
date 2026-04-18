@@ -15,16 +15,44 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Override for channel subscription options.
  */
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
-public record SubscribeOptionOverride(@JsonProperty("presence") Boolean presence,
-		@JsonProperty("join_leave") Boolean joinLeave, @JsonProperty("force_recovery") Boolean forceRecovery,
-		@JsonProperty("force_positioning") Boolean forcePositioning,
-		@JsonProperty("force_push_join_leave") Boolean forcePushJoinLeave) {
+public record SubscribeOptionOverride(@JsonIgnore Boolean presence, @JsonIgnore Boolean joinLeave,
+		@JsonIgnore Boolean forceRecovery, @JsonIgnore Boolean forcePositioning,
+		@JsonIgnore Boolean forcePushJoinLeave) {
+
+	@JsonProperty("presence")
+	public BoolValue jsonPresence() {
+		return BoolValue.of(this.presence);
+	}
+
+	@JsonProperty("join_leave")
+	public BoolValue jsonJoinLeave() {
+		return BoolValue.of(this.joinLeave);
+	}
+
+	@JsonProperty("force_recovery")
+	public BoolValue jsonForceRecovery() {
+		return BoolValue.of(this.forceRecovery);
+	}
+
+	@JsonProperty("force_positioning")
+	public BoolValue jsonForcePositioning() {
+		return BoolValue.of(this.forcePositioning);
+	}
+
+	@JsonProperty("force_push_join_leave")
+	public BoolValue jsonForcePushJoinLeave() {
+		return BoolValue.of(this.forcePushJoinLeave);
+	}
 
 	public static Builder builder() {
 		return new Builder();

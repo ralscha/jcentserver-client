@@ -20,34 +20,37 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Request to unblock a user.
+ * Request for calling a custom RPC method.
  */
 @JsonInclude(Include.NON_EMPTY)
 @SuppressWarnings({ "hiding" })
-public record UnblockUserRequest(@JsonProperty("user") String user) {
+public record RpcRequest(@JsonProperty("method") String method, @JsonProperty("params") Object params) {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static UnblockUserRequest of(String user) {
-		if (user == null || user.trim().isEmpty()) {
-			throw new IllegalArgumentException("'user' is required and cannot be null or empty");
-		}
-		return new UnblockUserRequest(user);
-	}
-
 	public static class Builder {
 
-		private String user;
+		private String method;
 
-		public Builder user(String user) {
-			this.user = user;
+		private Object params;
+
+		public Builder method(String method) {
+			this.method = method;
 			return this;
 		}
 
-		public UnblockUserRequest build() {
-			return UnblockUserRequest.of(this.user);
+		public Builder params(Object params) {
+			this.params = params;
+			return this;
+		}
+
+		public RpcRequest build() {
+			if (this.method == null || this.method.trim().isEmpty()) {
+				throw new IllegalArgumentException("'method' is required and cannot be null or empty");
+			}
+			return new RpcRequest(this.method, this.params);
 		}
 
 	}

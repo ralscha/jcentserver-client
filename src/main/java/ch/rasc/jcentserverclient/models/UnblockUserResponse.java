@@ -20,5 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Response for unblocking a user.
  */
-public record UnblockUserResponse(@JsonProperty("error") Error error) {
+public record UnblockUserResponse(@JsonProperty("error") Error error,
+		@JsonProperty("result") UnblockUserResult result) {
 }

@@ -28,7 +28,13 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 		@JsonProperty("presence_stats") PresenceStatsResult presenceStats,
 		@JsonProperty("history") HistoryResult history,
 		@JsonProperty("history_remove") HistoryRemoveResult historyRemove, @JsonProperty("info") InfoResult info,
-		@JsonProperty("refresh") RefreshResult refresh, @JsonProperty("channels") ChannelsResult channels) {
+		@JsonProperty("rpc") RpcResult rpc, @JsonProperty("refresh") RefreshResult refresh,
+		@JsonProperty("channels") ChannelsResult channels,
+		@JsonProperty("connections") ConnectionsResult connections,
+		@JsonProperty("block_user") BlockUserResult blockUser,
+		@JsonProperty("unblock_user") UnblockUserResult unblockUser,
+		@JsonProperty("revoke_token") RevokeTokenResult revokeToken,
+		@JsonProperty("invalidate_user_tokens") InvalidateUserTokensResult invalidateUserTokens) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -66,9 +72,21 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 
 		private InfoResult info;
 
+		private RpcResult rpc;
+
 		private RefreshResult refresh;
 
 		private ChannelsResult channels;
+
+		private ConnectionsResult connections;
+
+		private BlockUserResult blockUser;
+
+		private UnblockUserResult unblockUser;
+
+		private RevokeTokenResult revokeToken;
+
+		private InvalidateUserTokensResult invalidateUserTokens;
 
 		public Builder error(Error error) {
 			this.error = error;
@@ -125,6 +143,11 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 			return this;
 		}
 
+		public Builder rpc(RpcResult rpc) {
+			this.rpc = rpc;
+			return this;
+		}
+
 		public Builder refresh(RefreshResult refresh) {
 			this.refresh = refresh;
 			return this;
@@ -135,10 +158,36 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 			return this;
 		}
 
+		public Builder connections(ConnectionsResult connections) {
+			this.connections = connections;
+			return this;
+		}
+
+		public Builder blockUser(BlockUserResult blockUser) {
+			this.blockUser = blockUser;
+			return this;
+		}
+
+		public Builder unblockUser(UnblockUserResult unblockUser) {
+			this.unblockUser = unblockUser;
+			return this;
+		}
+
+		public Builder revokeToken(RevokeTokenResult revokeToken) {
+			this.revokeToken = revokeToken;
+			return this;
+		}
+
+		public Builder invalidateUserTokens(InvalidateUserTokensResult invalidateUserTokens) {
+			this.invalidateUserTokens = invalidateUserTokens;
+			return this;
+		}
+
 		public Reply build() {
 			return new Reply(this.error, this.publish, this.broadcast, this.subscribe, this.unsubscribe,
 					this.disconnect, this.presence, this.presenceStats, this.history, this.historyRemove, this.info,
-					this.refresh, this.channels);
+					this.rpc, this.refresh, this.channels, this.connections, this.blockUser, this.unblockUser,
+					this.revokeToken, this.invalidateUserTokens);
 		}
 
 	}

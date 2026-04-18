@@ -18,8 +18,12 @@ package ch.rasc.jcentserverclient.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Response for invalidating user tokens.
+ * Wrapper for boolean override values in Centrifugo requests.
  */
-public record InvalidateUserTokensResponse(@JsonProperty("error") Error error,
-		@JsonProperty("result") InvalidateUserTokensResult result) {
+public record BoolValue(@JsonProperty("value") Boolean value) {
+
+	public static BoolValue of(Boolean value) {
+		return value == null ? null : new BoolValue(value);
+	}
+
 }

@@ -28,7 +28,13 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 		@JsonProperty("presence_stats") PresenceStatsRequest presenceStats,
 		@JsonProperty("history") HistoryRequest history,
 		@JsonProperty("history_remove") HistoryRemoveRequest historyRemove, @JsonProperty("info") InfoRequest info,
-		@JsonProperty("refresh") RefreshRequest refresh, @JsonProperty("channels") ChannelsRequest channels) {
+		@JsonProperty("rpc") RpcRequest rpc, @JsonProperty("refresh") RefreshRequest refresh,
+		@JsonProperty("channels") ChannelsRequest channels,
+		@JsonProperty("connections") ConnectionsRequest connections,
+		@JsonProperty("block_user") BlockUserRequest blockUser,
+		@JsonProperty("unblock_user") UnblockUserRequest unblockUser,
+		@JsonProperty("revoke_token") RevokeTokenRequest revokeToken,
+		@JsonProperty("invalidate_user_tokens") InvalidateUserTokensRequest invalidateUserTokens) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -56,9 +62,21 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 
 		private InfoRequest info;
 
+		private RpcRequest rpc;
+
 		private RefreshRequest refresh;
 
 		private ChannelsRequest channels;
+
+		private ConnectionsRequest connections;
+
+		private BlockUserRequest blockUser;
+
+		private UnblockUserRequest unblockUser;
+
+		private RevokeTokenRequest revokeToken;
+
+		private InvalidateUserTokensRequest invalidateUserTokens;
 
 		public Builder publish(PublishRequest publish) {
 			this.publish = publish;
@@ -110,6 +128,11 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 			return this;
 		}
 
+		public Builder rpc(RpcRequest rpc) {
+			this.rpc = rpc;
+			return this;
+		}
+
 		public Builder refresh(RefreshRequest refresh) {
 			this.refresh = refresh;
 			return this;
@@ -120,10 +143,36 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 			return this;
 		}
 
+		public Builder connections(ConnectionsRequest connections) {
+			this.connections = connections;
+			return this;
+		}
+
+		public Builder blockUser(BlockUserRequest blockUser) {
+			this.blockUser = blockUser;
+			return this;
+		}
+
+		public Builder unblockUser(UnblockUserRequest unblockUser) {
+			this.unblockUser = unblockUser;
+			return this;
+		}
+
+		public Builder revokeToken(RevokeTokenRequest revokeToken) {
+			this.revokeToken = revokeToken;
+			return this;
+		}
+
+		public Builder invalidateUserTokens(InvalidateUserTokensRequest invalidateUserTokens) {
+			this.invalidateUserTokens = invalidateUserTokens;
+			return this;
+		}
+
 		public Command build() {
 			return new Command(this.publish, this.broadcast, this.subscribe, this.unsubscribe, this.disconnect,
-					this.presence, this.presenceStats, this.history, this.historyRemove, this.info, this.refresh,
-					this.channels);
+					this.presence, this.presenceStats, this.history, this.historyRemove, this.info, this.rpc,
+					this.refresh, this.channels, this.connections, this.blockUser, this.unblockUser,
+					this.revokeToken, this.invalidateUserTokens);
 		}
 
 	}

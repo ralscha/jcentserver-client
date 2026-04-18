@@ -25,7 +25,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_EMPTY)
 @SuppressWarnings({ "hiding" })
 public record InvalidateUserTokensRequest(@JsonProperty("user") String user,
-		@JsonProperty("issued_before") Long issuedBefore) {
+		@JsonProperty("issued_before") Long issuedBefore, @JsonProperty("expire_at") Long expireAt,
+		@JsonProperty("channel") String channel) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -37,6 +38,10 @@ public record InvalidateUserTokensRequest(@JsonProperty("user") String user,
 
 		private Long issuedBefore;
 
+		private Long expireAt;
+
+		private String channel;
+
 		public Builder user(String user) {
 			this.user = user;
 			return this;
@@ -47,11 +52,21 @@ public record InvalidateUserTokensRequest(@JsonProperty("user") String user,
 			return this;
 		}
 
+		public Builder expireAt(Long expireAt) {
+			this.expireAt = expireAt;
+			return this;
+		}
+
+		public Builder channel(String channel) {
+			this.channel = channel;
+			return this;
+		}
+
 		public InvalidateUserTokensRequest build() {
 			if (this.user == null || this.user.trim().isEmpty()) {
 				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
 			}
-			return new InvalidateUserTokensRequest(this.user, this.issuedBefore);
+			return new InvalidateUserTokensRequest(this.user, this.issuedBefore, this.expireAt, this.channel);
 		}
 
 	}

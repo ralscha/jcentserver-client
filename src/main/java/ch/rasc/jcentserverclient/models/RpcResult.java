@@ -18,8 +18,7 @@ package ch.rasc.jcentserverclient.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Response for invalidating user tokens.
+ * Result of a custom RPC method invocation.
  */
-public record InvalidateUserTokensResponse(@JsonProperty("error") Error error,
-		@JsonProperty("result") InvalidateUserTokensResult result) {
+public record RpcResult(@JsonProperty("data") Object data) {
 }

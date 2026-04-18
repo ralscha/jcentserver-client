@@ -25,6 +25,7 @@ import ch.rasc.jcentserverclient.clients.ConnectionClient;
 import ch.rasc.jcentserverclient.clients.HistoryClient;
 import ch.rasc.jcentserverclient.clients.PresenceClient;
 import ch.rasc.jcentserverclient.clients.PublicationClient;
+import ch.rasc.jcentserverclient.clients.RpcClient;
 import ch.rasc.jcentserverclient.clients.StatsClient;
 import ch.rasc.jcentserverclient.clients.TokenClient;
 import ch.rasc.jcentserverclient.clients.UserBlockClient;
@@ -86,6 +87,9 @@ public class CentrifugoServerApiClient {
 	// Presence API endpoints
 	private PresenceClient presence;
 
+	// RPC API endpoints
+	private RpcClient rpc;
+
 	// Stats API endpoints
 	private StatsClient stats;
 
@@ -145,6 +149,9 @@ public class CentrifugoServerApiClient {
 
 		client.presence = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(PresenceClient.class, baseUrl);
+
+		client.rpc = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
+			.target(RpcClient.class, baseUrl);
 
 		client.stats = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(StatsClient.class, baseUrl);
@@ -240,6 +247,16 @@ public class CentrifugoServerApiClient {
 	 */
 	public PresenceClient presence() {
 		return this.presence;
+	}
+
+	/**
+	 * Get the RPC API client for invoking custom server-side methods.
+	 * @return the RPC client
+	 * @see <a href="https://centrifugal.dev/docs/server/server_api">Server API
+	 * Documentation</a>
+	 */
+	public RpcClient rpc() {
+		return this.rpc;
 	}
 
 	/**

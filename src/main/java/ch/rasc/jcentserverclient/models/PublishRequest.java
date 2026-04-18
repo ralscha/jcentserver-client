@@ -29,7 +29,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record PublishRequest(@JsonProperty("channel") String channel, @JsonProperty("data") Object data,
 		@JsonProperty("b64data") String b64data, @JsonProperty("skip_history") Boolean skipHistory,
 		@JsonProperty("tags") Map<String, String> tags, @JsonProperty("idempotency_key") String idempotencyKey,
-		@JsonProperty("delta") Boolean delta) {
+		@JsonProperty("delta") Boolean delta, @JsonProperty("version") Long version,
+		@JsonProperty("version_epoch") String versionEpoch) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -50,6 +51,10 @@ public record PublishRequest(@JsonProperty("channel") String channel, @JsonPrope
 		private String idempotencyKey;
 
 		private Boolean delta;
+
+		private Long version;
+
+		private String versionEpoch;
 
 		public Builder channel(String channel) {
 			this.channel = channel;
@@ -86,6 +91,16 @@ public record PublishRequest(@JsonProperty("channel") String channel, @JsonPrope
 			return this;
 		}
 
+		public Builder version(Long version) {
+			this.version = version;
+			return this;
+		}
+
+		public Builder versionEpoch(String versionEpoch) {
+			this.versionEpoch = versionEpoch;
+			return this;
+		}
+
 		public PublishRequest build() {
 			if (this.channel == null || this.channel.trim().isEmpty()) {
 				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
@@ -94,7 +109,7 @@ public record PublishRequest(@JsonProperty("channel") String channel, @JsonPrope
 				throw new IllegalArgumentException("'data' is required and cannot be null");
 			}
 			return new PublishRequest(this.channel, this.data, this.b64data, this.skipHistory, this.tags,
-					this.idempotencyKey, this.delta);
+					this.idempotencyKey, this.delta, this.version, this.versionEpoch);
 		}
 
 	}

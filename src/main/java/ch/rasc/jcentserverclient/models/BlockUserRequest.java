@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonInclude(Include.NON_EMPTY)
 @SuppressWarnings({ "hiding" })
-public record BlockUserRequest(@JsonProperty("user") String user, @JsonProperty("expired_at") Long expiredAt) {
+public record BlockUserRequest(@JsonProperty("user") String user, @JsonProperty("expire_at") Long expiredAt) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -43,6 +43,11 @@ public record BlockUserRequest(@JsonProperty("user") String user, @JsonProperty(
 
 		public Builder expiredAt(Long expiredAt) {
 			this.expiredAt = expiredAt;
+			return this;
+		}
+
+		public Builder expireAt(Long expireAt) {
+			this.expiredAt = expireAt;
 			return this;
 		}
 

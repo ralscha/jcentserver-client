@@ -139,8 +139,11 @@ class CentrifugoComprehensiveIntegrationTest extends CentrifugoIntegrationTestBa
 		assertThat(this.client.channels()).isNotNull();
 		assertThat(this.client.history()).isNotNull();
 		assertThat(this.client.presence()).isNotNull();
+		assertThat(this.client.rpc()).isNotNull();
 		assertThat(this.client.stats()).isNotNull();
 		assertThat(this.client.connection()).isNotNull();
+		assertThat(this.client.userBlock()).isNotNull();
+		assertThat(this.client.token()).isNotNull();
 		assertThat(this.client.batch()).isNotNull();
 
 		// Verify base URL is correctly set

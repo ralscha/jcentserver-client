@@ -20,5 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Response for revoking a token.
  */
-public record RevokeTokenResponse(@JsonProperty("error") Error error) {
+public record RevokeTokenResponse(@JsonProperty("error") Error error,
+		@JsonProperty("result") RevokeTokenResult result) {
 }

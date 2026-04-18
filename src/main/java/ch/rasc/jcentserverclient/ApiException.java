@@ -29,20 +29,31 @@ public class ApiException extends RuntimeException {
 	private final int statusCode;
 
 	public ApiException(ApiError error, String responseBody, int statusCode) {
-		super(formatMessage(error));
+		super(formatMessage(error, statusCode, responseBody));
 		this.error = error;
 		this.responseBody = responseBody;
 		this.statusCode = statusCode;
 	}
 
-	private static String formatMessage(ApiError error) {
+	private static String formatMessage(ApiError error, int statusCode, String responseBody) {
 		if (error != null && error.getMessage() != null) {
 			return String.format("Centrifugo API error (code %d): %s", error.getCode(), error.getMessage());
 		}
-		return "Centrifugo API error";
+		if (responseBody != null && !responseBody.isBlank()) {
+			String compactBody = responseBody.replaceAll("\\s+", " ").trim();
+			if (compactBody.length() > 120) {
+				compactBody = compactBody.substring(0, 120) + "...";
+			}
+			return String.format("Centrifugo API transport error (status %d): %s", statusCode, compactBody);
+		}
+		return String.format("Centrifugo API transport error (status %d)", statusCode);
 	}
 
 	public ApiError getError() {
+		return this.error;
+	}
+
+	public ApiError error() {
 		return this.error;
 	}
 
@@ -50,7 +61,15 @@ public class ApiException extends RuntimeException {
 		return this.responseBody;
 	}
 
+	public String responseBody() {
+		return this.responseBody;
+	}
+
 	public int getStatusCode() {
+		return this.statusCode;
+	}
+
+	public int status() {
 		return this.statusCode;
 	}
 

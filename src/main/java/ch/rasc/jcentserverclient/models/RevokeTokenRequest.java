@@ -23,12 +23,43 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Request to revoke a token.
  */
 @JsonInclude(Include.NON_EMPTY)
-public record RevokeTokenRequest(@JsonProperty("uid") String uid) {
+@SuppressWarnings({ "hiding" })
+public record RevokeTokenRequest(@JsonProperty("uid") String uid,
+		@JsonProperty("expire_at") Long expireAt) {
+
+	public static Builder builder() {
+		return new Builder();
+	}
 
 	public static RevokeTokenRequest of(String uid) {
 		if (uid == null || uid.trim().isEmpty()) {
 			throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
 		}
-		return new RevokeTokenRequest(uid);
+		return new RevokeTokenRequest(uid, null);
+	}
+
+	public static class Builder {
+
+		private String uid;
+
+		private Long expireAt;
+
+		public Builder uid(String uid) {
+			this.uid = uid;
+			return this;
+		}
+
+		public Builder expireAt(Long expireAt) {
+			this.expireAt = expireAt;
+			return this;
+		}
+
+		public RevokeTokenRequest build() {
+			if (this.uid == null || this.uid.trim().isEmpty()) {
+				throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
+			}
+			return new RevokeTokenRequest(this.uid, this.expireAt);
+		}
+
 	}
 }

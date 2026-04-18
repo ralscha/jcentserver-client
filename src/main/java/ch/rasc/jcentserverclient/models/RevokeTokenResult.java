@@ -15,11 +15,8 @@
  */
 package ch.rasc.jcentserverclient.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
- * Response for invalidating user tokens.
+ * Result of a revoke token operation (empty object).
  */
-public record InvalidateUserTokensResponse(@JsonProperty("error") Error error,
-		@JsonProperty("result") InvalidateUserTokensResult result) {
+public record RevokeTokenResult() {
 }

@@ -20,5 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Response for blocking a user.
  */
-public record BlockUserResponse(@JsonProperty("error") Error error) {
+public record BlockUserResponse(@JsonProperty("error") Error error,
+		@JsonProperty("result") BlockUserResult result) {
 }

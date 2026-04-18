@@ -17,49 +17,56 @@ package ch.rasc.jcentserverclient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
 
 import feign.Response;
 import feign.Response.Body;
-import feign.codec.ErrorDecoder;
 
 /**
  * Error decoder for Centrifugo API responses.
  */
 public class ApiErrorDecoder implements feign.codec.ErrorDecoder {
 
-	private final ErrorDecoder.Default delegate = new ErrorDecoder.Default();
-
 	private final JsonMapper jsonMapper = JsonMapper.builder().build();
 
 	@Override
-	public Exception decode(String methodKey, Response response) {
+	public Exception decode(String ignoredMethodKey, Response response) {
 		String responseBody = null;
 		ApiError error = null;
 
-		try (Body body = response.body(); InputStream inputStream = body.asInputStream()) {
-			responseBody = new String(inputStream.readAllBytes());
+		Body body = response.body();
+		if (body == null) {
+			return new ApiException(null, null, response.status());
+		}
+
+		try (Body responseBodySource = body; InputStream inputStream = responseBodySource.asInputStream()) {
+			responseBody = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
 			if (!responseBody.trim().isEmpty()) {
-				JsonNode root = this.jsonMapper.readTree(responseBody);
-				JsonNode errorNode = root.get("error");
-				if (errorNode != null && !errorNode.isNull()) {
-					error = this.jsonMapper.treeToValue(errorNode, ApiError.class);
+				try {
+					JsonNode root = this.jsonMapper.readTree(responseBody);
+					JsonNode errorNode = root.get("error");
+					if (errorNode != null && !errorNode.isNull()) {
+						error = this.jsonMapper.treeToValue(errorNode, ApiError.class);
+					}
+				}
+				catch (RuntimeException e) {
+					return new ApiException(null, responseBody, response.status());
 				}
 			}
 		}
 		catch (IOException e) {
-			// Fall back to default decoder
-			return this.delegate.decode(methodKey, response);
+			return new ApiException(null, responseBody, response.status());
 		}
 
 		if (error != null) {
 			return new ApiException(error, responseBody, response.status());
 		}
 
-		return this.delegate.decode(methodKey, response);
+		return new ApiException(null, responseBody, response.status());
 	}
 
 }

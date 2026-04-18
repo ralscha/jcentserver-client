@@ -15,11 +15,8 @@
  */
 package ch.rasc.jcentserverclient.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
- * Response for invalidating user tokens.
+ * Result of an unblock user operation (empty object).
  */
-public record InvalidateUserTokensResponse(@JsonProperty("error") Error error,
-		@JsonProperty("result") InvalidateUserTokensResult result) {
+public record UnblockUserResult() {
 }

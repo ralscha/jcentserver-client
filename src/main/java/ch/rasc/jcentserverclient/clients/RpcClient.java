@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ch.rasc.jcentserverclient.models;
+package ch.rasc.jcentserverclient.clients;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.function.Function;
+
+import ch.rasc.jcentserverclient.models.RpcRequest;
+import ch.rasc.jcentserverclient.models.RpcResponse;
+import feign.Headers;
+import feign.RequestLine;
 
 /**
- * Response for invalidating user tokens.
+ * Centrifugo RPC API client for custom server-side RPC methods.
  */
-public record InvalidateUserTokensResponse(@JsonProperty("error") Error error,
-		@JsonProperty("result") InvalidateUserTokensResult result) {
+@Headers("Content-Type: application/json")
+public interface RpcClient {
+
+	@RequestLine("POST /rpc")
+	RpcResponse rpc(RpcRequest request);
+
+	default RpcResponse rpc(Function<RpcRequest.Builder, RpcRequest.Builder> fn) {
+		return this.rpc(fn.apply(RpcRequest.builder()).build());
+	}
+
 }
