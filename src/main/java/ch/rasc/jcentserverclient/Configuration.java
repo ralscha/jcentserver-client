@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import feign.Client;
+import feign.DefaultRetryer;
 import feign.Logger;
 import feign.Logger.Level;
 import feign.Request;
@@ -91,7 +92,7 @@ public class Configuration {
 		this.baseUrl = Objects.requireNonNullElse(builder.baseUrl, "http://localhost:8000/api");
 		this.client = Objects.requireNonNullElse(builder.client, new Http2Client());
 		this.retryer = Objects.requireNonNullElse(builder.retryer,
-				new Retryer.Default(TimeUnit.SECONDS.toMillis(2), TimeUnit.SECONDS.toMillis(2), 3));
+				new DefaultRetryer(TimeUnit.SECONDS.toMillis(2), TimeUnit.SECONDS.toMillis(2), 3));
 		this.feignOptions = Objects.requireNonNullElse(builder.feignOptions,
 				new Request.Options(10, TimeUnit.SECONDS, 60, TimeUnit.SECONDS, true));
 		this.logger = Objects.requireNonNullElse(builder.logger, new Slf4jLogger());
