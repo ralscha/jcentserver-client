@@ -15,10 +15,10 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+public record ApnsPushNotification(@JsonProperty("headers") Map<String, String> headers,
+		@JsonProperty("payload") Object payload) {
 }

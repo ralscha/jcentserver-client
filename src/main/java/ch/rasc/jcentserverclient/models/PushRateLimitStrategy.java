@@ -15,10 +15,11 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+public record PushRateLimitStrategy(@JsonProperty("key") String key,
+		@JsonProperty("policies") List<RateLimitPolicy> policies,
+		@JsonProperty("drop_if_rate_limited") Boolean dropIfRateLimited) {
 }

@@ -15,10 +15,11 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+@JsonInclude(Include.NON_EMPTY)
+public record PushLimitStrategy(@JsonProperty("rate_limit") PushRateLimitStrategy rateLimit,
+		@JsonProperty("time_limit") PushTimeLimitStrategy timeLimit) {
 }

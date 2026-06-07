@@ -15,10 +15,36 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+@JsonInclude(Include.NON_EMPTY)
+public record GetUserStatusRequest(@JsonProperty("users") List<String> users) {
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private List<String> users;
+
+		public Builder users(List<String> users) {
+			this.users = List.copyOf(users);
+			return this;
+		}
+
+		public Builder users(String... users) {
+			this.users = List.of(users);
+			return this;
+		}
+
+		public GetUserStatusRequest build() {
+			return new GetUserStatusRequest(this.users);
+		}
+
+	}
 }

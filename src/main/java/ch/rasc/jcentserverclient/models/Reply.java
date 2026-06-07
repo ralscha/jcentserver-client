@@ -29,12 +29,25 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 		@JsonProperty("history") HistoryResult history,
 		@JsonProperty("history_remove") HistoryRemoveResult historyRemove, @JsonProperty("info") InfoResult info,
 		@JsonProperty("rpc") RpcResult rpc, @JsonProperty("refresh") RefreshResult refresh,
-		@JsonProperty("channels") ChannelsResult channels,
-		@JsonProperty("connections") ConnectionsResult connections,
+		@JsonProperty("channels") ChannelsResult channels, @JsonProperty("connections") ConnectionsResult connections,
+		@JsonProperty("update_user_status") UpdateUserStatusResult updateUserStatus,
+		@JsonProperty("get_user_status") GetUserStatusResult getUserStatus,
+		@JsonProperty("delete_user_status") DeleteUserStatusResult deleteUserStatus,
 		@JsonProperty("block_user") BlockUserResult blockUser,
 		@JsonProperty("unblock_user") UnblockUserResult unblockUser,
 		@JsonProperty("revoke_token") RevokeTokenResult revokeToken,
-		@JsonProperty("invalidate_user_tokens") InvalidateUserTokensResult invalidateUserTokens) {
+		@JsonProperty("invalidate_user_tokens") InvalidateUserTokensResult invalidateUserTokens,
+		@JsonProperty("device_register") DeviceRegisterResult deviceRegister,
+		@JsonProperty("device_update") DeviceUpdateResult deviceUpdate,
+		@JsonProperty("device_remove") DeviceRemoveResult deviceRemove,
+		@JsonProperty("device_list") DeviceListResult deviceList,
+		@JsonProperty("device_topic_list") DeviceTopicListResult deviceTopicList,
+		@JsonProperty("device_topic_update") DeviceTopicUpdateResult deviceTopicUpdate,
+		@JsonProperty("user_topic_list") UserTopicListResult userTopicList,
+		@JsonProperty("user_topic_update") UserTopicUpdateResult userTopicUpdate,
+		@JsonProperty("send_push_notification") SendPushNotificationResult sendPushNotification,
+		@JsonProperty("update_push_status") UpdatePushStatusResult updatePushStatus,
+		@JsonProperty("cancel_push") CancelPushResult cancelPush) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -80,6 +93,12 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 
 		private ConnectionsResult connections;
 
+		private UpdateUserStatusResult updateUserStatus;
+
+		private GetUserStatusResult getUserStatus;
+
+		private DeleteUserStatusResult deleteUserStatus;
+
 		private BlockUserResult blockUser;
 
 		private UnblockUserResult unblockUser;
@@ -87,6 +106,28 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 		private RevokeTokenResult revokeToken;
 
 		private InvalidateUserTokensResult invalidateUserTokens;
+
+		private DeviceRegisterResult deviceRegister;
+
+		private DeviceUpdateResult deviceUpdate;
+
+		private DeviceRemoveResult deviceRemove;
+
+		private DeviceListResult deviceList;
+
+		private DeviceTopicListResult deviceTopicList;
+
+		private DeviceTopicUpdateResult deviceTopicUpdate;
+
+		private UserTopicListResult userTopicList;
+
+		private UserTopicUpdateResult userTopicUpdate;
+
+		private SendPushNotificationResult sendPushNotification;
+
+		private UpdatePushStatusResult updatePushStatus;
+
+		private CancelPushResult cancelPush;
 
 		public Builder error(Error error) {
 			this.error = error;
@@ -163,6 +204,21 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 			return this;
 		}
 
+		public Builder updateUserStatus(UpdateUserStatusResult updateUserStatus) {
+			this.updateUserStatus = updateUserStatus;
+			return this;
+		}
+
+		public Builder getUserStatus(GetUserStatusResult getUserStatus) {
+			this.getUserStatus = getUserStatus;
+			return this;
+		}
+
+		public Builder deleteUserStatus(DeleteUserStatusResult deleteUserStatus) {
+			this.deleteUserStatus = deleteUserStatus;
+			return this;
+		}
+
 		public Builder blockUser(BlockUserResult blockUser) {
 			this.blockUser = blockUser;
 			return this;
@@ -183,11 +239,69 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 			return this;
 		}
 
+		public Builder deviceRegister(DeviceRegisterResult deviceRegister) {
+			this.deviceRegister = deviceRegister;
+			return this;
+		}
+
+		public Builder deviceUpdate(DeviceUpdateResult deviceUpdate) {
+			this.deviceUpdate = deviceUpdate;
+			return this;
+		}
+
+		public Builder deviceRemove(DeviceRemoveResult deviceRemove) {
+			this.deviceRemove = deviceRemove;
+			return this;
+		}
+
+		public Builder deviceList(DeviceListResult deviceList) {
+			this.deviceList = deviceList;
+			return this;
+		}
+
+		public Builder deviceTopicList(DeviceTopicListResult deviceTopicList) {
+			this.deviceTopicList = deviceTopicList;
+			return this;
+		}
+
+		public Builder deviceTopicUpdate(DeviceTopicUpdateResult deviceTopicUpdate) {
+			this.deviceTopicUpdate = deviceTopicUpdate;
+			return this;
+		}
+
+		public Builder userTopicList(UserTopicListResult userTopicList) {
+			this.userTopicList = userTopicList;
+			return this;
+		}
+
+		public Builder userTopicUpdate(UserTopicUpdateResult userTopicUpdate) {
+			this.userTopicUpdate = userTopicUpdate;
+			return this;
+		}
+
+		public Builder sendPushNotification(SendPushNotificationResult sendPushNotification) {
+			this.sendPushNotification = sendPushNotification;
+			return this;
+		}
+
+		public Builder updatePushStatus(UpdatePushStatusResult updatePushStatus) {
+			this.updatePushStatus = updatePushStatus;
+			return this;
+		}
+
+		public Builder cancelPush(CancelPushResult cancelPush) {
+			this.cancelPush = cancelPush;
+			return this;
+		}
+
 		public Reply build() {
 			return new Reply(this.error, this.publish, this.broadcast, this.subscribe, this.unsubscribe,
 					this.disconnect, this.presence, this.presenceStats, this.history, this.historyRemove, this.info,
-					this.rpc, this.refresh, this.channels, this.connections, this.blockUser, this.unblockUser,
-					this.revokeToken, this.invalidateUserTokens);
+					this.rpc, this.refresh, this.channels, this.connections, this.updateUserStatus, this.getUserStatus,
+					this.deleteUserStatus, this.blockUser, this.unblockUser, this.revokeToken,
+					this.invalidateUserTokens, this.deviceRegister, this.deviceUpdate, this.deviceRemove,
+					this.deviceList, this.deviceTopicList, this.deviceTopicUpdate, this.userTopicList,
+					this.userTopicUpdate, this.sendPushNotification, this.updatePushStatus, this.cancelPush);
 		}
 
 	}

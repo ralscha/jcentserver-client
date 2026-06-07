@@ -15,11 +15,14 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Command object for batch operations.
  */
+@JsonInclude(Include.NON_EMPTY)
 @SuppressWarnings({ "hiding" })
 public record Command(@JsonProperty("publish") PublishRequest publish,
 		@JsonProperty("broadcast") BroadcastRequest broadcast, @JsonProperty("subscribe") SubscribeRequest subscribe,
@@ -29,12 +32,25 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 		@JsonProperty("history") HistoryRequest history,
 		@JsonProperty("history_remove") HistoryRemoveRequest historyRemove, @JsonProperty("info") InfoRequest info,
 		@JsonProperty("rpc") RpcRequest rpc, @JsonProperty("refresh") RefreshRequest refresh,
-		@JsonProperty("channels") ChannelsRequest channels,
-		@JsonProperty("connections") ConnectionsRequest connections,
+		@JsonProperty("channels") ChannelsRequest channels, @JsonProperty("connections") ConnectionsRequest connections,
+		@JsonProperty("update_user_status") UpdateUserStatusRequest updateUserStatus,
+		@JsonProperty("get_user_status") GetUserStatusRequest getUserStatus,
+		@JsonProperty("delete_user_status") DeleteUserStatusRequest deleteUserStatus,
 		@JsonProperty("block_user") BlockUserRequest blockUser,
 		@JsonProperty("unblock_user") UnblockUserRequest unblockUser,
 		@JsonProperty("revoke_token") RevokeTokenRequest revokeToken,
-		@JsonProperty("invalidate_user_tokens") InvalidateUserTokensRequest invalidateUserTokens) {
+		@JsonProperty("invalidate_user_tokens") InvalidateUserTokensRequest invalidateUserTokens,
+		@JsonProperty("device_register") DeviceRegisterRequest deviceRegister,
+		@JsonProperty("device_update") DeviceUpdateRequest deviceUpdate,
+		@JsonProperty("device_remove") DeviceRemoveRequest deviceRemove,
+		@JsonProperty("device_list") DeviceListRequest deviceList,
+		@JsonProperty("device_topic_list") DeviceTopicListRequest deviceTopicList,
+		@JsonProperty("device_topic_update") DeviceTopicUpdateRequest deviceTopicUpdate,
+		@JsonProperty("user_topic_list") UserTopicListRequest userTopicList,
+		@JsonProperty("user_topic_update") UserTopicUpdateRequest userTopicUpdate,
+		@JsonProperty("send_push_notification") SendPushNotificationRequest sendPushNotification,
+		@JsonProperty("update_push_status") UpdatePushStatusRequest updatePushStatus,
+		@JsonProperty("cancel_push") CancelPushRequest cancelPush) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -70,6 +86,12 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 
 		private ConnectionsRequest connections;
 
+		private UpdateUserStatusRequest updateUserStatus;
+
+		private GetUserStatusRequest getUserStatus;
+
+		private DeleteUserStatusRequest deleteUserStatus;
+
 		private BlockUserRequest blockUser;
 
 		private UnblockUserRequest unblockUser;
@@ -77,6 +99,28 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 		private RevokeTokenRequest revokeToken;
 
 		private InvalidateUserTokensRequest invalidateUserTokens;
+
+		private DeviceRegisterRequest deviceRegister;
+
+		private DeviceUpdateRequest deviceUpdate;
+
+		private DeviceRemoveRequest deviceRemove;
+
+		private DeviceListRequest deviceList;
+
+		private DeviceTopicListRequest deviceTopicList;
+
+		private DeviceTopicUpdateRequest deviceTopicUpdate;
+
+		private UserTopicListRequest userTopicList;
+
+		private UserTopicUpdateRequest userTopicUpdate;
+
+		private SendPushNotificationRequest sendPushNotification;
+
+		private UpdatePushStatusRequest updatePushStatus;
+
+		private CancelPushRequest cancelPush;
 
 		public Builder publish(PublishRequest publish) {
 			this.publish = publish;
@@ -148,6 +192,21 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 			return this;
 		}
 
+		public Builder updateUserStatus(UpdateUserStatusRequest updateUserStatus) {
+			this.updateUserStatus = updateUserStatus;
+			return this;
+		}
+
+		public Builder getUserStatus(GetUserStatusRequest getUserStatus) {
+			this.getUserStatus = getUserStatus;
+			return this;
+		}
+
+		public Builder deleteUserStatus(DeleteUserStatusRequest deleteUserStatus) {
+			this.deleteUserStatus = deleteUserStatus;
+			return this;
+		}
+
 		public Builder blockUser(BlockUserRequest blockUser) {
 			this.blockUser = blockUser;
 			return this;
@@ -168,11 +227,69 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 			return this;
 		}
 
+		public Builder deviceRegister(DeviceRegisterRequest deviceRegister) {
+			this.deviceRegister = deviceRegister;
+			return this;
+		}
+
+		public Builder deviceUpdate(DeviceUpdateRequest deviceUpdate) {
+			this.deviceUpdate = deviceUpdate;
+			return this;
+		}
+
+		public Builder deviceRemove(DeviceRemoveRequest deviceRemove) {
+			this.deviceRemove = deviceRemove;
+			return this;
+		}
+
+		public Builder deviceList(DeviceListRequest deviceList) {
+			this.deviceList = deviceList;
+			return this;
+		}
+
+		public Builder deviceTopicList(DeviceTopicListRequest deviceTopicList) {
+			this.deviceTopicList = deviceTopicList;
+			return this;
+		}
+
+		public Builder deviceTopicUpdate(DeviceTopicUpdateRequest deviceTopicUpdate) {
+			this.deviceTopicUpdate = deviceTopicUpdate;
+			return this;
+		}
+
+		public Builder userTopicList(UserTopicListRequest userTopicList) {
+			this.userTopicList = userTopicList;
+			return this;
+		}
+
+		public Builder userTopicUpdate(UserTopicUpdateRequest userTopicUpdate) {
+			this.userTopicUpdate = userTopicUpdate;
+			return this;
+		}
+
+		public Builder sendPushNotification(SendPushNotificationRequest sendPushNotification) {
+			this.sendPushNotification = sendPushNotification;
+			return this;
+		}
+
+		public Builder updatePushStatus(UpdatePushStatusRequest updatePushStatus) {
+			this.updatePushStatus = updatePushStatus;
+			return this;
+		}
+
+		public Builder cancelPush(CancelPushRequest cancelPush) {
+			this.cancelPush = cancelPush;
+			return this;
+		}
+
 		public Command build() {
 			return new Command(this.publish, this.broadcast, this.subscribe, this.unsubscribe, this.disconnect,
 					this.presence, this.presenceStats, this.history, this.historyRemove, this.info, this.rpc,
-					this.refresh, this.channels, this.connections, this.blockUser, this.unblockUser,
-					this.revokeToken, this.invalidateUserTokens);
+					this.refresh, this.channels, this.connections, this.updateUserStatus, this.getUserStatus,
+					this.deleteUserStatus, this.blockUser, this.unblockUser, this.revokeToken,
+					this.invalidateUserTokens, this.deviceRegister, this.deviceUpdate, this.deviceRemove,
+					this.deviceList, this.deviceTopicList, this.deviceTopicUpdate, this.userTopicList,
+					this.userTopicUpdate, this.sendPushNotification, this.updatePushStatus, this.cancelPush);
 		}
 
 	}

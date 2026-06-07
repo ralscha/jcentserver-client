@@ -15,49 +15,47 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Request to revoke a token.
- */
 @JsonInclude(Include.NON_EMPTY)
-@SuppressWarnings({ "hiding" })
-public record RevokeTokenRequest(@JsonProperty("uid") String uid, @JsonProperty("expire_at") Long expireAt) {
+public record DeviceRemoveRequest(@JsonProperty("ids") List<String> ids, @JsonProperty("users") List<String> users) {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static RevokeTokenRequest of(String uid) {
-		if (uid == null || uid.trim().isEmpty()) {
-			throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
-		}
-		return new RevokeTokenRequest(uid, null);
-	}
-
 	public static class Builder {
 
-		private String uid;
+		private List<String> ids;
 
-		private Long expireAt;
+		private List<String> users;
 
-		public Builder uid(String uid) {
-			this.uid = uid;
+		public Builder ids(List<String> ids) {
+			this.ids = List.copyOf(ids);
 			return this;
 		}
 
-		public Builder expireAt(Long expireAt) {
-			this.expireAt = expireAt;
+		public Builder ids(String... ids) {
+			this.ids = List.of(ids);
 			return this;
 		}
 
-		public RevokeTokenRequest build() {
-			if (this.uid == null || this.uid.trim().isEmpty()) {
-				throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
-			}
-			return new RevokeTokenRequest(this.uid, this.expireAt);
+		public Builder users(List<String> users) {
+			this.users = List.copyOf(users);
+			return this;
+		}
+
+		public Builder users(String... users) {
+			this.users = List.of(users);
+			return this;
+		}
+
+		public DeviceRemoveRequest build() {
+			return new DeviceRemoveRequest(this.ids, this.users);
 		}
 
 	}

@@ -24,15 +24,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import ch.rasc.jcentserverclient.models.BatchRequest;
+import ch.rasc.jcentserverclient.models.BatchResponse;
 import ch.rasc.jcentserverclient.models.BlockUserRequest;
 import ch.rasc.jcentserverclient.models.BroadcastRequest;
 import ch.rasc.jcentserverclient.models.Command;
 import ch.rasc.jcentserverclient.models.ConnectionsRequest;
 import ch.rasc.jcentserverclient.models.InvalidateUserTokensRequest;
 import ch.rasc.jcentserverclient.models.PublishRequest;
+import ch.rasc.jcentserverclient.models.SendPushNotificationRequest;
 import ch.rasc.jcentserverclient.models.RevokeTokenRequest;
 import ch.rasc.jcentserverclient.models.RpcRequest;
 import ch.rasc.jcentserverclient.models.SubscribeOptionOverride;
+import ch.rasc.jcentserverclient.models.UpdateUserStatusRequest;
 import tools.jackson.databind.json.JsonMapper;
 
 @DisplayName("Request Serialization Tests")
@@ -136,7 +139,9 @@ class RequestSerializationTest {
 	void shouldSerializeBatchRpcAndConnectionsCommands() throws Exception {
 		BatchRequest request = BatchRequest.builder()
 			.commands(
-					Command.builder().rpc(RpcRequest.builder().method("ping").params(Map.of("value", 1)).build()).build(),
+					Command.builder()
+						.rpc(RpcRequest.builder().method("ping").params(Map.of("value", 1)).build())
+						.build(),
 					Command.builder().connections(ConnectionsRequest.builder().user("user-3").build()).build())
 			.build();
 
@@ -144,6 +149,42 @@ class RequestSerializationTest {
 
 		assertThat(json).contains("\"rpc\":{\"method\":\"ping\",\"params\":{\"value\":1}}");
 		assertThat(json).contains("\"connections\":{\"user\":\"user-3\"}");
+		assertThat(json).doesNotContain("\"publish\":null");
+		assertThat(json).doesNotContain("\"broadcast\":null");
+	}
+
+	@Test
+	@DisplayName("Should deserialize documented batch response shape")
+	void shouldDeserializeDocumentedBatchResponseShape() throws Exception {
+		String json = """
+				{"replies":[{"publish":{}},{"error":{"code":102,"message":"unknown channel"}}]}
+				""";
+
+		BatchResponse response = OBJECT_MAPPER.readValue(json, BatchResponse.class);
+
+		assertThat(response.replies()).hasSize(2);
+		assertThat(response.result().replies()).hasSize(2);
+		assertThat(response.hasError()).isTrue();
+		assertThat(response.replies().get(1).error().code()).isEqualTo(102L);
+	}
+
+	@Test
+	@DisplayName("Should serialize new Swagger batch command fields")
+	void shouldSerializeNewSwaggerBatchCommandFields() throws Exception {
+		BatchRequest request = BatchRequest.builder()
+			.commands(
+					Command.builder()
+						.updateUserStatus(UpdateUserStatusRequest.builder().users("user-1").state("busy").build())
+						.build(),
+					Command.builder()
+						.sendPushNotification(SendPushNotificationRequest.builder().uid("push-1").build())
+						.build())
+			.build();
+
+		String json = OBJECT_MAPPER.writeValueAsString(request);
+
+		assertThat(json).contains("\"update_user_status\":{\"users\":[\"user-1\"],\"state\":\"busy\"}");
+		assertThat(json).contains("\"send_push_notification\":{\"uid\":\"push-1\"}");
 	}
 
 }

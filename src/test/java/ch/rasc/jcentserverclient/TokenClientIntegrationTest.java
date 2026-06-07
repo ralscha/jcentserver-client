@@ -60,8 +60,8 @@ class TokenClientIntegrationTest extends CentrifugoIntegrationTestBase {
 	void shouldSurfaceTransportErrorForInvalidateUserTokensWhenEndpointIsUnavailable() {
 		String user = "token-user-" + System.currentTimeMillis();
 
-		assertThatThrownBy(
-				() -> this.client.token().invalidateUserTokens(InvalidateUserTokensRequest.builder().user(user).build()))
+		assertThatThrownBy(() -> this.client.token()
+			.invalidateUserTokens(InvalidateUserTokensRequest.builder().user(user).build()))
 			.isInstanceOfSatisfying(ApiException.class, e -> {
 				assertThat(e.getStatusCode()).isEqualTo(404);
 				assertThat(e.getError()).isNull();

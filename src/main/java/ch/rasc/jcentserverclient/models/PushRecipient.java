@@ -15,10 +15,16 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+@JsonInclude(Include.NON_EMPTY)
+public record PushRecipient(@JsonProperty("filter") DeviceFilter filter,
+		@JsonProperty("fcm_tokens") List<String> fcmTokens, @JsonProperty("fcm_topic") String fcmTopic,
+		@JsonProperty("fcm_condition") String fcmCondition, @JsonProperty("hms_tokens") List<String> hmsTokens,
+		@JsonProperty("hms_topic") String hmsTopic, @JsonProperty("hms_condition") String hmsCondition,
+		@JsonProperty("apns_tokens") List<String> apnsTokens) {
 }

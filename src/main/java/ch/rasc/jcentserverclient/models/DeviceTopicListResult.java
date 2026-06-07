@@ -15,10 +15,10 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+public record DeviceTopicListResult(@JsonProperty("items") List<DeviceTopic> items,
+		@JsonProperty("next_cursor") String nextCursor, @JsonProperty("total_count") Long totalCount) {
 }

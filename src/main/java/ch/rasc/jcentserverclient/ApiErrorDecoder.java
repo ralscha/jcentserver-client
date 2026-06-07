@@ -52,6 +52,9 @@ public class ApiErrorDecoder implements feign.codec.ErrorDecoder {
 					if (errorNode != null && !errorNode.isNull()) {
 						error = this.jsonMapper.treeToValue(errorNode, ApiError.class);
 					}
+					else if (root.get("code") != null || root.get("message") != null) {
+						error = this.jsonMapper.treeToValue(root, ApiError.class);
+					}
 				}
 				catch (RuntimeException e) {
 					return new ApiException(null, responseBody, response.status());

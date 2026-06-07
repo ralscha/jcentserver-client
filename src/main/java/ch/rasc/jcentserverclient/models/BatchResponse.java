@@ -15,36 +15,63 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Response from a batch operation.
  */
-public record BatchResponse(@JsonProperty("error") Error error, @JsonProperty("result") BatchResult result) {
+public record BatchResponse(@JsonProperty("replies") List<Reply> replies) {
 
 	/**
-	 * Check if the response has an error.
-	 * @return true if there is an error, false otherwise
+	 * Check if any reply in the response has an error.
+	 * @return true if there is an error in any reply, false otherwise
 	 */
 	public boolean hasError() {
-		return this.error != null;
+		return this.replies != null && this.replies.stream().anyMatch(Reply::hasError);
 	}
 
 	/**
-	 * Get the error if present.
-	 * @return the error or null if no error
+	 * Get the first reply error if present.
+	 * @return the first reply error or null if no reply has an error
 	 */
-	@Override
 	public Error error() {
-		return this.error;
+		if (this.replies == null) {
+			return null;
+		}
+		return this.replies.stream().filter(Reply::hasError).map(Reply::error).findFirst().orElse(null);
 	}
 
 	/**
-	 * Get the result if successful.
-	 * @return the result or null if there was an error
+	 * Get the first reply error if present.
+	 * @return the first reply error or null if no reply has an error
 	 */
-	@Override
+	public Error getError() {
+		return this.error();
+	}
+
+	/**
+	 * Get the replies from the batch response.
+	 * @return individual replies for each command
+	 */
+	public List<Reply> getReplies() {
+		return this.replies;
+	}
+
+	/**
+	 * Get the result wrapper for compatibility with older client versions.
+	 * @return a result wrapper containing the replies
+	 */
 	public BatchResult result() {
-		return this.result;
+		return new BatchResult(this.replies);
+	}
+
+	/**
+	 * Get the result wrapper for compatibility with older client versions.
+	 * @return a result wrapper containing the replies
+	 */
+	public BatchResult getResult() {
+		return this.result();
 	}
 }

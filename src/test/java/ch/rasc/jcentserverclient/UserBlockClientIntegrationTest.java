@@ -34,12 +34,12 @@ class UserBlockClientIntegrationTest extends CentrifugoIntegrationTestBase {
 
 		BlockUserRequest request = BlockUserRequest.builder().user(user).build();
 
-		assertThatThrownBy(() -> this.client.userBlock().blockUser(request))
-			.isInstanceOfSatisfying(ApiException.class, e -> {
-				assertThat(e.getStatusCode()).isEqualTo(404);
-				assertThat(e.getError()).isNull();
-				assertThat(e.getResponseBody()).containsIgnoringCase("page");
-			});
+		assertThatThrownBy(() -> this.client.userBlock().blockUser(request)).isInstanceOfSatisfying(ApiException.class,
+				e -> {
+					assertThat(e.getStatusCode()).isEqualTo(404);
+					assertThat(e.getError()).isNull();
+					assertThat(e.getResponseBody()).containsIgnoringCase("page");
+				});
 	}
 
 	@Test
@@ -50,12 +50,12 @@ class UserBlockClientIntegrationTest extends CentrifugoIntegrationTestBase {
 
 		BlockUserRequest request = BlockUserRequest.builder().user(user).expireAt(oneHourFromNow).build();
 
-		assertThatThrownBy(() -> this.client.userBlock().blockUser(request))
-			.isInstanceOfSatisfying(ApiException.class, e -> {
-				assertThat(e.getStatusCode()).isEqualTo(404);
-				assertThat(e.getError()).isNull();
-				assertThat(e.getResponseBody()).containsIgnoringCase("page");
-			});
+		assertThatThrownBy(() -> this.client.userBlock().blockUser(request)).isInstanceOfSatisfying(ApiException.class,
+				e -> {
+					assertThat(e.getStatusCode()).isEqualTo(404);
+					assertThat(e.getError()).isNull();
+					assertThat(e.getResponseBody()).containsIgnoringCase("page");
+				});
 	}
 
 	@Test
@@ -78,12 +78,12 @@ class UserBlockClientIntegrationTest extends CentrifugoIntegrationTestBase {
 	void shouldSurfaceTransportErrorForUnblockOverloadWhenEndpointIsUnavailable() {
 		String user = "unblocked-convenience-user-" + System.currentTimeMillis();
 
-		assertThatThrownBy(() -> this.client.userBlock().unblockUser(user))
-			.isInstanceOfSatisfying(ApiException.class, e -> {
-				assertThat(e.getStatusCode()).isEqualTo(404);
-				assertThat(e.getError()).isNull();
-				assertThat(e.getResponseBody()).containsIgnoringCase("page");
-			});
+		assertThatThrownBy(() -> this.client.userBlock().unblockUser(user)).isInstanceOfSatisfying(ApiException.class,
+				e -> {
+					assertThat(e.getStatusCode()).isEqualTo(404);
+					assertThat(e.getError()).isNull();
+					assertThat(e.getResponseBody()).containsIgnoringCase("page");
+				});
 	}
 
 }

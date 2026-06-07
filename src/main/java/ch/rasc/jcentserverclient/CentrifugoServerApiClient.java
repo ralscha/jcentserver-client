@@ -22,13 +22,16 @@ import java.util.function.Function;
 import ch.rasc.jcentserverclient.clients.BatchClient;
 import ch.rasc.jcentserverclient.clients.ChannelsClient;
 import ch.rasc.jcentserverclient.clients.ConnectionClient;
+import ch.rasc.jcentserverclient.clients.DeviceClient;
 import ch.rasc.jcentserverclient.clients.HistoryClient;
 import ch.rasc.jcentserverclient.clients.PresenceClient;
 import ch.rasc.jcentserverclient.clients.PublicationClient;
+import ch.rasc.jcentserverclient.clients.PushClient;
 import ch.rasc.jcentserverclient.clients.RpcClient;
 import ch.rasc.jcentserverclient.clients.StatsClient;
 import ch.rasc.jcentserverclient.clients.TokenClient;
 import ch.rasc.jcentserverclient.clients.UserBlockClient;
+import ch.rasc.jcentserverclient.clients.UserStatusClient;
 import feign.Feign;
 import feign.Feign.Builder;
 import feign.RequestInterceptor;
@@ -105,6 +108,15 @@ public class CentrifugoServerApiClient {
 	// Batch API endpoints
 	private BatchClient batch;
 
+	// User status API endpoints
+	private UserStatusClient userStatus;
+
+	// Device and topic API endpoints
+	private DeviceClient device;
+
+	// Push notification API endpoints
+	private PushClient push;
+
 	/**
 	 * Create a new Centrifugo Server API client with custom configuration.
 	 * @param fn function to configure the client builder
@@ -150,8 +162,8 @@ public class CentrifugoServerApiClient {
 		client.presence = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(PresenceClient.class, baseUrl);
 
-		client.rpc = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
-			.target(RpcClient.class, baseUrl);
+		client.rpc = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors).target(RpcClient.class,
+				baseUrl);
 
 		client.stats = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(StatsClient.class, baseUrl);
@@ -167,6 +179,15 @@ public class CentrifugoServerApiClient {
 
 		client.batch = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
 			.target(BatchClient.class, baseUrl);
+
+		client.userStatus = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
+			.target(UserStatusClient.class, baseUrl);
+
+		client.device = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors)
+			.target(DeviceClient.class, baseUrl);
+
+		client.push = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors).target(PushClient.class,
+				baseUrl);
 
 		return client;
 	}
@@ -341,6 +362,30 @@ public class CentrifugoServerApiClient {
 	 */
 	public BatchClient batch() {
 		return this.batch;
+	}
+
+	/**
+	 * Get the User Status API client.
+	 * @return the user status client
+	 */
+	public UserStatusClient userStatus() {
+		return this.userStatus;
+	}
+
+	/**
+	 * Get the Device API client.
+	 * @return the device client
+	 */
+	public DeviceClient device() {
+		return this.device;
+	}
+
+	/**
+	 * Get the Push Notification API client.
+	 * @return the push client
+	 */
+	public PushClient push() {
+		return this.push;
 	}
 
 	private static Builder jsonClientBuilder(Configuration configuration, Jackson3Decoder jsonDecoder,

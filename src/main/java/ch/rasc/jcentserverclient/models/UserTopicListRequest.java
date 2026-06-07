@@ -19,45 +19,47 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Request to revoke a token.
- */
 @JsonInclude(Include.NON_EMPTY)
-@SuppressWarnings({ "hiding" })
-public record RevokeTokenRequest(@JsonProperty("uid") String uid, @JsonProperty("expire_at") Long expireAt) {
+public record UserTopicListRequest(@JsonProperty("filter") UserTopicFilter filter,
+		@JsonProperty("include_total_count") Boolean includeTotalCount, @JsonProperty("cursor") String cursor,
+		@JsonProperty("limit") Integer limit) {
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static RevokeTokenRequest of(String uid) {
-		if (uid == null || uid.trim().isEmpty()) {
-			throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
-		}
-		return new RevokeTokenRequest(uid, null);
-	}
-
 	public static class Builder {
 
-		private String uid;
+		private UserTopicFilter filter;
 
-		private Long expireAt;
+		private Boolean includeTotalCount;
 
-		public Builder uid(String uid) {
-			this.uid = uid;
+		private String cursor;
+
+		private Integer limit;
+
+		public Builder filter(UserTopicFilter filter) {
+			this.filter = filter;
 			return this;
 		}
 
-		public Builder expireAt(Long expireAt) {
-			this.expireAt = expireAt;
+		public Builder includeTotalCount(Boolean includeTotalCount) {
+			this.includeTotalCount = includeTotalCount;
 			return this;
 		}
 
-		public RevokeTokenRequest build() {
-			if (this.uid == null || this.uid.trim().isEmpty()) {
-				throw new IllegalArgumentException("'uid' is required and cannot be null or empty");
-			}
-			return new RevokeTokenRequest(this.uid, this.expireAt);
+		public Builder cursor(String cursor) {
+			this.cursor = cursor;
+			return this;
+		}
+
+		public Builder limit(Integer limit) {
+			this.limit = limit;
+			return this;
+		}
+
+		public UserTopicListRequest build() {
+			return new UserTopicListRequest(this.filter, this.includeTotalCount, this.cursor, this.limit);
 		}
 
 	}

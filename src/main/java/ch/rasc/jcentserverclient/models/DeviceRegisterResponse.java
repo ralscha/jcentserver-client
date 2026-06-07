@@ -17,8 +17,10 @@ package ch.rasc.jcentserverclient.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Response for blocking a user.
- */
-public record BlockUserResponse(@JsonProperty("error") Error error, @JsonProperty("result") BlockUserResult result) {
+public record DeviceRegisterResponse(@JsonProperty("error") Error error,
+		@JsonProperty("result") DeviceRegisterResult result) {
+
+	public boolean hasError() {
+		return this.error != null;
+	}
 }
