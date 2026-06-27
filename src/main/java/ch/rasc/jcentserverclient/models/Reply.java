@@ -47,7 +47,12 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 		@JsonProperty("user_topic_update") UserTopicUpdateResult userTopicUpdate,
 		@JsonProperty("send_push_notification") SendPushNotificationResult sendPushNotification,
 		@JsonProperty("update_push_status") UpdatePushStatusResult updatePushStatus,
-		@JsonProperty("cancel_push") CancelPushResult cancelPush) {
+		@JsonProperty("cancel_push") CancelPushResult cancelPush,
+		@JsonProperty("map_publish") MapPublishResult mapPublish, @JsonProperty("map_remove") MapRemoveResult mapRemove,
+		@JsonProperty("map_read_state") MapReadStateResult mapReadState,
+		@JsonProperty("map_read_stream") MapReadStreamResult mapReadStream,
+		@JsonProperty("map_stats") MapStatsResult mapStats, @JsonProperty("map_clear") MapClearResult mapClear,
+		@JsonProperty("shared_poll_publish") SharedPollPublishResult sharedPollPublish) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -128,6 +133,20 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 		private UpdatePushStatusResult updatePushStatus;
 
 		private CancelPushResult cancelPush;
+
+		private MapPublishResult mapPublish;
+
+		private MapRemoveResult mapRemove;
+
+		private MapReadStateResult mapReadState;
+
+		private MapReadStreamResult mapReadStream;
+
+		private MapStatsResult mapStats;
+
+		private MapClearResult mapClear;
+
+		private SharedPollPublishResult sharedPollPublish;
 
 		public Builder error(Error error) {
 			this.error = error;
@@ -294,6 +313,41 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 			return this;
 		}
 
+		public Builder mapPublish(MapPublishResult mapPublish) {
+			this.mapPublish = mapPublish;
+			return this;
+		}
+
+		public Builder mapRemove(MapRemoveResult mapRemove) {
+			this.mapRemove = mapRemove;
+			return this;
+		}
+
+		public Builder mapReadState(MapReadStateResult mapReadState) {
+			this.mapReadState = mapReadState;
+			return this;
+		}
+
+		public Builder mapReadStream(MapReadStreamResult mapReadStream) {
+			this.mapReadStream = mapReadStream;
+			return this;
+		}
+
+		public Builder mapStats(MapStatsResult mapStats) {
+			this.mapStats = mapStats;
+			return this;
+		}
+
+		public Builder mapClear(MapClearResult mapClear) {
+			this.mapClear = mapClear;
+			return this;
+		}
+
+		public Builder sharedPollPublish(SharedPollPublishResult sharedPollPublish) {
+			this.sharedPollPublish = sharedPollPublish;
+			return this;
+		}
+
 		public Reply build() {
 			return new Reply(this.error, this.publish, this.broadcast, this.subscribe, this.unsubscribe,
 					this.disconnect, this.presence, this.presenceStats, this.history, this.historyRemove, this.info,
@@ -301,7 +355,9 @@ public record Reply(@JsonProperty("error") Error error, @JsonProperty("publish")
 					this.deleteUserStatus, this.blockUser, this.unblockUser, this.revokeToken,
 					this.invalidateUserTokens, this.deviceRegister, this.deviceUpdate, this.deviceRemove,
 					this.deviceList, this.deviceTopicList, this.deviceTopicUpdate, this.userTopicList,
-					this.userTopicUpdate, this.sendPushNotification, this.updatePushStatus, this.cancelPush);
+					this.userTopicUpdate, this.sendPushNotification, this.updatePushStatus, this.cancelPush,
+					this.mapPublish, this.mapRemove, this.mapReadState, this.mapReadStream, this.mapStats,
+					this.mapClear, this.sharedPollPublish);
 		}
 
 	}

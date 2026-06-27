@@ -29,7 +29,8 @@ public record SubscribeRequest(@JsonProperty("channel") String channel, @JsonPro
 		@JsonProperty("b64info") String b64info, @JsonProperty("client") String client,
 		@JsonProperty("data") Object data, @JsonProperty("b64data") String b64data,
 		@JsonProperty("recover_since") StreamPosition recoverSince,
-		@JsonProperty("override") SubscribeOptionOverride override, @JsonProperty("session") String session) {
+		@JsonProperty("override") SubscribeOptionOverride override, @JsonProperty("session") String session,
+		@JsonProperty("label_filter") FilterNode labelFilter, @JsonProperty("all_users") Boolean allUsers) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -58,6 +59,10 @@ public record SubscribeRequest(@JsonProperty("channel") String channel, @JsonPro
 		private SubscribeOptionOverride override;
 
 		private String session;
+
+		private FilterNode labelFilter;
+
+		private Boolean allUsers;
 
 		public Builder channel(String channel) {
 			this.channel = channel;
@@ -114,15 +119,26 @@ public record SubscribeRequest(@JsonProperty("channel") String channel, @JsonPro
 			return this;
 		}
 
+		public Builder labelFilter(FilterNode labelFilter) {
+			this.labelFilter = labelFilter;
+			return this;
+		}
+
+		public Builder allUsers(Boolean allUsers) {
+			this.allUsers = allUsers;
+			return this;
+		}
+
 		public SubscribeRequest build() {
-			if (this.user == null || this.user.trim().isEmpty()) {
+			if ((this.user == null || this.user.trim().isEmpty()) && !Boolean.TRUE.equals(this.allUsers)) {
 				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
 			}
 			if (this.channel == null || this.channel.trim().isEmpty()) {
 				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
 			}
 			return new SubscribeRequest(this.channel, this.user, this.expireAt, this.info, this.b64info, this.client,
-					this.data, this.b64data, this.recoverSince, this.override, this.session);
+					this.data, this.b64data, this.recoverSince, this.override, this.session, this.labelFilter,
+					this.allUsers);
 		}
 
 	}

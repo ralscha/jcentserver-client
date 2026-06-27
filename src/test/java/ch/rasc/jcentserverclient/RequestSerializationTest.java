@@ -29,7 +29,9 @@ import ch.rasc.jcentserverclient.models.BlockUserRequest;
 import ch.rasc.jcentserverclient.models.BroadcastRequest;
 import ch.rasc.jcentserverclient.models.Command;
 import ch.rasc.jcentserverclient.models.ConnectionsRequest;
+import ch.rasc.jcentserverclient.models.FilterNode;
 import ch.rasc.jcentserverclient.models.InvalidateUserTokensRequest;
+import ch.rasc.jcentserverclient.models.MapPublishRequest;
 import ch.rasc.jcentserverclient.models.PublishRequest;
 import ch.rasc.jcentserverclient.models.SendPushNotificationRequest;
 import ch.rasc.jcentserverclient.models.RevokeTokenRequest;
@@ -185,6 +187,40 @@ class RequestSerializationTest {
 
 		assertThat(json).contains("\"update_user_status\":{\"users\":[\"user-1\"],\"state\":\"busy\"}");
 		assertThat(json).contains("\"send_push_notification\":{\"uid\":\"push-1\"}");
+	}
+
+	@Test
+	@DisplayName("Should serialize Centrifugo 6.8 targeting fields")
+	void shouldSerializeCentrifugo68TargetingFields() throws Exception {
+		ConnectionsRequest request = ConnectionsRequest.builder()
+			.labelFilter(FilterNode.builder().op("eq").key("tenant").val("acme").build())
+			.build();
+
+		String json = OBJECT_MAPPER.writeValueAsString(request);
+
+		assertThat(json).contains("\"label_filter\":{\"op\":\"eq\",\"key\":\"tenant\",\"val\":\"acme\"}");
+	}
+
+	@Test
+	@DisplayName("Should serialize Centrifugo 6.8 map batch commands")
+	void shouldSerializeCentrifugo68MapBatchCommands() throws Exception {
+		BatchRequest request = BatchRequest.builder()
+			.commands(Command.builder()
+				.mapPublish(MapPublishRequest.builder()
+					.channel("docs")
+					.key("doc-1")
+					.data(Map.of("title", "API"))
+					.score(42L)
+					.keyMode("replace")
+					.build())
+				.build())
+			.build();
+
+		String json = OBJECT_MAPPER.writeValueAsString(request);
+
+		assertThat(json).contains("\"map_publish\":");
+		assertThat(json).contains("\"key_mode\":\"replace\"");
+		assertThat(json).contains("\"score\":42");
 	}
 
 }

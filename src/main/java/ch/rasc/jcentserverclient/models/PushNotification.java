@@ -22,5 +22,5 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_EMPTY)
 public record PushNotification(@JsonProperty("fcm") FcmPushNotification fcm,
 		@JsonProperty("hms") HmsPushNotification hms, @JsonProperty("apns") ApnsPushNotification apns,
-		@JsonProperty("expire_at") Long expireAt) {
+		@JsonProperty("webpush") WebPushPushNotification webpush, @JsonProperty("expire_at") Long expireAt) {
 }

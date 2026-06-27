@@ -26,5 +26,6 @@ public record PushRecipient(@JsonProperty("filter") DeviceFilter filter,
 		@JsonProperty("fcm_tokens") List<String> fcmTokens, @JsonProperty("fcm_topic") String fcmTopic,
 		@JsonProperty("fcm_condition") String fcmCondition, @JsonProperty("hms_tokens") List<String> hmsTokens,
 		@JsonProperty("hms_topic") String hmsTopic, @JsonProperty("hms_condition") String hmsCondition,
-		@JsonProperty("apns_tokens") List<String> apnsTokens) {
+		@JsonProperty("apns_tokens") List<String> apnsTokens,
+		@JsonProperty("webpush_tokens") List<String> webpushTokens) {
 }

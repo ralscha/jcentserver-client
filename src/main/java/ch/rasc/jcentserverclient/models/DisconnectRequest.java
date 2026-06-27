@@ -28,7 +28,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @SuppressWarnings({ "hiding" })
 public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty("client") String client,
 		@JsonProperty("session") String session, @JsonProperty("whitelist") List<String> whitelist,
-		@JsonProperty("disconnect") Disconnect disconnect) {
+		@JsonProperty("disconnect") Disconnect disconnect, @JsonProperty("label_filter") FilterNode labelFilter,
+		@JsonProperty("all_users") Boolean allUsers) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -45,6 +46,10 @@ public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty
 		private List<String> whitelist;
 
 		private Disconnect disconnect;
+
+		private FilterNode labelFilter;
+
+		private Boolean allUsers;
 
 		public Builder user(String user) {
 			this.user = user;
@@ -76,11 +81,22 @@ public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty
 			return this;
 		}
 
+		public Builder labelFilter(FilterNode labelFilter) {
+			this.labelFilter = labelFilter;
+			return this;
+		}
+
+		public Builder allUsers(Boolean allUsers) {
+			this.allUsers = allUsers;
+			return this;
+		}
+
 		public DisconnectRequest build() {
-			if (this.user == null || this.user.trim().isEmpty()) {
+			if ((this.user == null || this.user.trim().isEmpty()) && !Boolean.TRUE.equals(this.allUsers)) {
 				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
 			}
-			return new DisconnectRequest(this.user, this.client, this.session, this.whitelist, this.disconnect);
+			return new DisconnectRequest(this.user, this.client, this.session, this.whitelist, this.disconnect,
+					this.labelFilter, this.allUsers);
 		}
 
 	}

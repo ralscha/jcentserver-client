@@ -24,6 +24,7 @@ import ch.rasc.jcentserverclient.clients.ChannelsClient;
 import ch.rasc.jcentserverclient.clients.ConnectionClient;
 import ch.rasc.jcentserverclient.clients.DeviceClient;
 import ch.rasc.jcentserverclient.clients.HistoryClient;
+import ch.rasc.jcentserverclient.clients.MapClient;
 import ch.rasc.jcentserverclient.clients.PresenceClient;
 import ch.rasc.jcentserverclient.clients.PublicationClient;
 import ch.rasc.jcentserverclient.clients.PushClient;
@@ -117,6 +118,9 @@ public class CentrifugoServerApiClient {
 	// Push notification API endpoints
 	private PushClient push;
 
+	// Map API endpoints
+	private MapClient map;
+
 	/**
 	 * Create a new Centrifugo Server API client with custom configuration.
 	 * @param fn function to configure the client builder
@@ -187,6 +191,9 @@ public class CentrifugoServerApiClient {
 			.target(DeviceClient.class, baseUrl);
 
 		client.push = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors).target(PushClient.class,
+				baseUrl);
+
+		client.map = jsonClientBuilder(configuration, jsonDecoder, jsonEncoder, interceptors).target(MapClient.class,
 				baseUrl);
 
 		return client;
@@ -386,6 +393,14 @@ public class CentrifugoServerApiClient {
 	 */
 	public PushClient push() {
 		return this.push;
+	}
+
+	/**
+	 * Get the Map API client.
+	 * @return the map client
+	 */
+	public MapClient map() {
+		return this.map;
 	}
 
 	private static Builder jsonClientBuilder(Configuration configuration, Jackson3Decoder jsonDecoder,

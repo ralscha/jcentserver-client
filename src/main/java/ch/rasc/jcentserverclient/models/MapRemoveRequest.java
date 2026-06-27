@@ -15,15 +15,11 @@
  */
 package ch.rasc.jcentserverclient.models;
 
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record Device(@JsonProperty("id") String id, @JsonProperty("platform") String platform,
-		@JsonProperty("provider") String provider, @JsonProperty("token") String token,
-		@JsonProperty("user") String user, @JsonProperty("created_at") Long createdAt,
-		@JsonProperty("updated_at") Long updatedAt, @JsonProperty("meta") Map<String, String> meta,
-		@JsonProperty("topics") List<String> topics, @JsonProperty("timezone") String timezone,
-		@JsonProperty("locale") String locale, @JsonProperty("webpush_keys") String webpushKeys) {
+@JsonInclude(Include.NON_EMPTY)
+public record MapRemoveRequest(@JsonProperty("channel") String channel, @JsonProperty("key") String key,
+		@JsonProperty("idempotency_key") String idempotencyKey) {
 }

@@ -23,7 +23,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record DeviceListRequest(@JsonProperty("filter") DeviceFilter filter,
 		@JsonProperty("include_total_count") Boolean includeTotalCount,
 		@JsonProperty("include_meta") Boolean includeMeta, @JsonProperty("include_topics") Boolean includeTopics,
-		@JsonProperty("cursor") String cursor, @JsonProperty("limit") Integer limit) {
+		@JsonProperty("include_webpush_keys") Boolean includeWebpushKeys, @JsonProperty("cursor") String cursor,
+		@JsonProperty("limit") Integer limit) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -38,6 +39,8 @@ public record DeviceListRequest(@JsonProperty("filter") DeviceFilter filter,
 		private Boolean includeMeta;
 
 		private Boolean includeTopics;
+
+		private Boolean includeWebpushKeys;
 
 		private String cursor;
 
@@ -63,6 +66,11 @@ public record DeviceListRequest(@JsonProperty("filter") DeviceFilter filter,
 			return this;
 		}
 
+		public Builder includeWebpushKeys(Boolean includeWebpushKeys) {
+			this.includeWebpushKeys = includeWebpushKeys;
+			return this;
+		}
+
 		public Builder cursor(String cursor) {
 			this.cursor = cursor;
 			return this;
@@ -75,7 +83,7 @@ public record DeviceListRequest(@JsonProperty("filter") DeviceFilter filter,
 
 		public DeviceListRequest build() {
 			return new DeviceListRequest(this.filter, this.includeTotalCount, this.includeMeta, this.includeTopics,
-					this.cursor, this.limit);
+					this.includeWebpushKeys, this.cursor, this.limit);
 		}
 
 	}

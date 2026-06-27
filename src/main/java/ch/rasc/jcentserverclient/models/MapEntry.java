@@ -15,15 +15,11 @@
  */
 package ch.rasc.jcentserverclient.models;
 
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record Device(@JsonProperty("id") String id, @JsonProperty("platform") String platform,
-		@JsonProperty("provider") String provider, @JsonProperty("token") String token,
-		@JsonProperty("user") String user, @JsonProperty("created_at") Long createdAt,
-		@JsonProperty("updated_at") Long updatedAt, @JsonProperty("meta") Map<String, String> meta,
-		@JsonProperty("topics") List<String> topics, @JsonProperty("timezone") String timezone,
-		@JsonProperty("locale") String locale, @JsonProperty("webpush_keys") String webpushKeys) {
+public record MapEntry(@JsonProperty("key") String key, @JsonProperty("data") Object data,
+		@JsonProperty("tags") Map<String, String> tags, @JsonProperty("offset") Long offset,
+		@JsonProperty("score") Long score, @JsonProperty("removed") Boolean removed, @JsonProperty("time") Long time) {
 }

@@ -32,6 +32,7 @@ import ch.rasc.jcentserverclient.clients.ChannelsClient;
 import ch.rasc.jcentserverclient.clients.ConnectionClient;
 import ch.rasc.jcentserverclient.clients.DeviceClient;
 import ch.rasc.jcentserverclient.clients.HistoryClient;
+import ch.rasc.jcentserverclient.clients.MapClient;
 import ch.rasc.jcentserverclient.clients.PresenceClient;
 import ch.rasc.jcentserverclient.clients.PublicationClient;
 import ch.rasc.jcentserverclient.clients.PushClient;
@@ -58,9 +59,7 @@ class SwaggerAlignmentTest {
 
 		Set<String> clientPaths = clientPaths();
 
-		assertThat(clientPaths).containsAll(swaggerPaths);
-		assertThat(clientPaths.stream().filter(path -> !swaggerPaths.contains(path)).collect(Collectors.toSet()))
-			.containsOnly("rpc");
+		assertThat(clientPaths).containsExactlyElementsOf(swaggerPaths);
 	}
 
 	private static Set<String> clientPaths() {
@@ -68,7 +67,7 @@ class SwaggerAlignmentTest {
 			.stream(new Class<?>[] { BatchClient.class, ChannelsClient.class, ConnectionClient.class,
 					DeviceClient.class, HistoryClient.class, PresenceClient.class, PublicationClient.class,
 					PushClient.class, RpcClient.class, StatsClient.class, TokenClient.class, UserBlockClient.class,
-					UserStatusClient.class })
+					UserStatusClient.class, MapClient.class })
 			.flatMap(client -> Arrays.stream(client.getMethods()))
 			.map(method -> method.getAnnotation(RequestLine.class))
 			.filter(annotation -> annotation != null && annotation.value().startsWith("POST /"))

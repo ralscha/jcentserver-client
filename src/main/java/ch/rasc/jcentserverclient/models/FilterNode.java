@@ -22,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_EMPTY)
-public record DeviceTopicUpdateRequest(@JsonProperty("device_id") String deviceId, @JsonProperty("op") String op,
-		@JsonProperty("topics") List<String> topics, @JsonProperty("user") String user) {
+@SuppressWarnings({ "hiding" })
+public record FilterNode(@JsonProperty("op") String op, @JsonProperty("key") String key,
+		@JsonProperty("cmp") String cmp, @JsonProperty("val") String val, @JsonProperty("vals") List<String> vals,
+		@JsonProperty("nodes") List<FilterNode> nodes) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -31,41 +33,60 @@ public record DeviceTopicUpdateRequest(@JsonProperty("device_id") String deviceI
 
 	public static class Builder {
 
-		private String deviceId;
-
 		private String op;
 
-		private List<String> topics;
+		private String key;
 
-		private String user;
+		private String cmp;
 
-		public Builder deviceId(String deviceId) {
-			this.deviceId = deviceId;
-			return this;
-		}
+		private String val;
+
+		private List<String> vals;
+
+		private List<FilterNode> nodes;
 
 		public Builder op(String op) {
 			this.op = op;
 			return this;
 		}
 
-		public Builder topics(List<String> topics) {
-			this.topics = List.copyOf(topics);
+		public Builder key(String key) {
+			this.key = key;
 			return this;
 		}
 
-		public Builder topics(String... topics) {
-			this.topics = List.of(topics);
+		public Builder cmp(String cmp) {
+			this.cmp = cmp;
 			return this;
 		}
 
-		public Builder user(String user) {
-			this.user = user;
+		public Builder val(String val) {
+			this.val = val;
 			return this;
 		}
 
-		public DeviceTopicUpdateRequest build() {
-			return new DeviceTopicUpdateRequest(this.deviceId, this.op, this.topics, this.user);
+		public Builder vals(List<String> vals) {
+			this.vals = List.copyOf(vals);
+			return this;
+		}
+
+		public Builder vals(String... vals) {
+			this.vals = List.of(vals);
+			return this;
+		}
+
+		public Builder nodes(List<FilterNode> nodes) {
+			this.nodes = List.copyOf(nodes);
+			return this;
+		}
+
+		public Builder nodes(FilterNode... nodes) {
+			this.nodes = List.of(nodes);
+			return this;
+		}
+
+		public FilterNode build() {
+			return new FilterNode(this.op, this.key, this.cmp, this.val, this.vals, this.nodes);
 		}
 
 	}

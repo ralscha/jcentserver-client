@@ -15,6 +15,8 @@
  */
 package ch.rasc.jcentserverclient.models;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -23,7 +25,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @SuppressWarnings({ "hiding" })
 public record ConnectionInfo(@JsonProperty("app_name") String appName, @JsonProperty("app_version") String appVersion,
 		@JsonProperty("transport") String transport, @JsonProperty("protocol") String protocol,
-		@JsonProperty("user") String user, @JsonProperty("state") ConnectionState state) {
+		@JsonProperty("user") String user, @JsonProperty("state") ConnectionState state,
+		@JsonProperty("connected_at_ms") Long connectedAtMs,
+		@JsonProperty("ping_pong_latency_ms") Long pingPongLatencyMs,
+		@JsonProperty("labels") Map<String, String> labels) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -42,6 +47,12 @@ public record ConnectionInfo(@JsonProperty("app_name") String appName, @JsonProp
 		private String user;
 
 		private ConnectionState state;
+
+		private Long connectedAtMs;
+
+		private Long pingPongLatencyMs;
+
+		private Map<String, String> labels;
 
 		public Builder appName(String appName) {
 			this.appName = appName;
@@ -73,9 +84,24 @@ public record ConnectionInfo(@JsonProperty("app_name") String appName, @JsonProp
 			return this;
 		}
 
+		public Builder connectedAtMs(Long connectedAtMs) {
+			this.connectedAtMs = connectedAtMs;
+			return this;
+		}
+
+		public Builder pingPongLatencyMs(Long pingPongLatencyMs) {
+			this.pingPongLatencyMs = pingPongLatencyMs;
+			return this;
+		}
+
+		public Builder labels(Map<String, String> labels) {
+			this.labels = Map.copyOf(labels);
+			return this;
+		}
+
 		public ConnectionInfo build() {
 			return new ConnectionInfo(this.appName, this.appVersion, this.transport, this.protocol, this.user,
-					this.state);
+					this.state, this.connectedAtMs, this.pingPongLatencyMs, this.labels);
 		}
 
 	}

@@ -50,7 +50,13 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 		@JsonProperty("user_topic_update") UserTopicUpdateRequest userTopicUpdate,
 		@JsonProperty("send_push_notification") SendPushNotificationRequest sendPushNotification,
 		@JsonProperty("update_push_status") UpdatePushStatusRequest updatePushStatus,
-		@JsonProperty("cancel_push") CancelPushRequest cancelPush) {
+		@JsonProperty("cancel_push") CancelPushRequest cancelPush,
+		@JsonProperty("map_publish") MapPublishRequest mapPublish,
+		@JsonProperty("map_remove") MapRemoveRequest mapRemove,
+		@JsonProperty("map_read_state") MapReadStateRequest mapReadState,
+		@JsonProperty("map_read_stream") MapReadStreamRequest mapReadStream,
+		@JsonProperty("map_stats") MapStatsRequest mapStats, @JsonProperty("map_clear") MapClearRequest mapClear,
+		@JsonProperty("shared_poll_publish") SharedPollPublishRequest sharedPollPublish) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -121,6 +127,20 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 		private UpdatePushStatusRequest updatePushStatus;
 
 		private CancelPushRequest cancelPush;
+
+		private MapPublishRequest mapPublish;
+
+		private MapRemoveRequest mapRemove;
+
+		private MapReadStateRequest mapReadState;
+
+		private MapReadStreamRequest mapReadStream;
+
+		private MapStatsRequest mapStats;
+
+		private MapClearRequest mapClear;
+
+		private SharedPollPublishRequest sharedPollPublish;
 
 		public Builder publish(PublishRequest publish) {
 			this.publish = publish;
@@ -282,6 +302,41 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 			return this;
 		}
 
+		public Builder mapPublish(MapPublishRequest mapPublish) {
+			this.mapPublish = mapPublish;
+			return this;
+		}
+
+		public Builder mapRemove(MapRemoveRequest mapRemove) {
+			this.mapRemove = mapRemove;
+			return this;
+		}
+
+		public Builder mapReadState(MapReadStateRequest mapReadState) {
+			this.mapReadState = mapReadState;
+			return this;
+		}
+
+		public Builder mapReadStream(MapReadStreamRequest mapReadStream) {
+			this.mapReadStream = mapReadStream;
+			return this;
+		}
+
+		public Builder mapStats(MapStatsRequest mapStats) {
+			this.mapStats = mapStats;
+			return this;
+		}
+
+		public Builder mapClear(MapClearRequest mapClear) {
+			this.mapClear = mapClear;
+			return this;
+		}
+
+		public Builder sharedPollPublish(SharedPollPublishRequest sharedPollPublish) {
+			this.sharedPollPublish = sharedPollPublish;
+			return this;
+		}
+
 		public Command build() {
 			return new Command(this.publish, this.broadcast, this.subscribe, this.unsubscribe, this.disconnect,
 					this.presence, this.presenceStats, this.history, this.historyRemove, this.info, this.rpc,
@@ -289,7 +344,9 @@ public record Command(@JsonProperty("publish") PublishRequest publish,
 					this.deleteUserStatus, this.blockUser, this.unblockUser, this.revokeToken,
 					this.invalidateUserTokens, this.deviceRegister, this.deviceUpdate, this.deviceRemove,
 					this.deviceList, this.deviceTopicList, this.deviceTopicUpdate, this.userTopicList,
-					this.userTopicUpdate, this.sendPushNotification, this.updatePushStatus, this.cancelPush);
+					this.userTopicUpdate, this.sendPushNotification, this.updatePushStatus, this.cancelPush,
+					this.mapPublish, this.mapRemove, this.mapReadState, this.mapReadStream, this.mapStats,
+					this.mapClear, this.sharedPollPublish);
 		}
 
 	}

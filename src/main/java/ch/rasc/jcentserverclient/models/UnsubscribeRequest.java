@@ -25,7 +25,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(Include.NON_EMPTY)
 @SuppressWarnings({ "hiding" })
 public record UnsubscribeRequest(@JsonProperty("user") String user, @JsonProperty("channel") String channel,
-		@JsonProperty("client") String client, @JsonProperty("session") String session) {
+		@JsonProperty("client") String client, @JsonProperty("session") String session,
+		@JsonProperty("label_filter") FilterNode labelFilter, @JsonProperty("all_users") Boolean allUsers) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -40,6 +41,10 @@ public record UnsubscribeRequest(@JsonProperty("user") String user, @JsonPropert
 		private String client;
 
 		private String session;
+
+		private FilterNode labelFilter;
+
+		private Boolean allUsers;
 
 		public Builder user(String user) {
 			this.user = user;
@@ -61,14 +66,25 @@ public record UnsubscribeRequest(@JsonProperty("user") String user, @JsonPropert
 			return this;
 		}
 
+		public Builder labelFilter(FilterNode labelFilter) {
+			this.labelFilter = labelFilter;
+			return this;
+		}
+
+		public Builder allUsers(Boolean allUsers) {
+			this.allUsers = allUsers;
+			return this;
+		}
+
 		public UnsubscribeRequest build() {
-			if (this.user == null || this.user.trim().isEmpty()) {
+			if ((this.user == null || this.user.trim().isEmpty()) && !Boolean.TRUE.equals(this.allUsers)) {
 				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
 			}
 			if (this.channel == null || this.channel.trim().isEmpty()) {
 				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
 			}
-			return new UnsubscribeRequest(this.user, this.channel, this.client, this.session);
+			return new UnsubscribeRequest(this.user, this.channel, this.client, this.session, this.labelFilter,
+					this.allUsers);
 		}
 
 	}

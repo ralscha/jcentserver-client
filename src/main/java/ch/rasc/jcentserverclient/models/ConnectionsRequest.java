@@ -24,7 +24,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonInclude(Include.NON_EMPTY)
 @SuppressWarnings({ "hiding" })
-public record ConnectionsRequest(@JsonProperty("user") String user, @JsonProperty("expression") String expression) {
+public record ConnectionsRequest(@JsonProperty("user") String user, @JsonProperty("expression") String expression,
+		@JsonProperty("label_filter") FilterNode labelFilter) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -36,6 +37,8 @@ public record ConnectionsRequest(@JsonProperty("user") String user, @JsonPropert
 
 		private String expression;
 
+		private FilterNode labelFilter;
+
 		public Builder user(String user) {
 			this.user = user;
 			return this;
@@ -46,8 +49,13 @@ public record ConnectionsRequest(@JsonProperty("user") String user, @JsonPropert
 			return this;
 		}
 
+		public Builder labelFilter(FilterNode labelFilter) {
+			this.labelFilter = labelFilter;
+			return this;
+		}
+
 		public ConnectionsRequest build() {
-			return new ConnectionsRequest(this.user, this.expression);
+			return new ConnectionsRequest(this.user, this.expression, this.labelFilter);
 		}
 
 	}

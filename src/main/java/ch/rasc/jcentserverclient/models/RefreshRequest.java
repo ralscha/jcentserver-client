@@ -26,7 +26,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @SuppressWarnings({ "hiding" })
 public record RefreshRequest(@JsonProperty("user") String user, @JsonProperty("client") String client,
 		@JsonProperty("session") String session, @JsonProperty("expired") Boolean expired,
-		@JsonProperty("expire_at") Long expireAt, @JsonProperty("info") Object info) {
+		@JsonProperty("expire_at") Long expireAt, @JsonProperty("info") Object info,
+		@JsonProperty("label_filter") FilterNode labelFilter, @JsonProperty("all_users") Boolean allUsers) {
 
 	public static Builder builder() {
 		return new Builder();
@@ -45,6 +46,10 @@ public record RefreshRequest(@JsonProperty("user") String user, @JsonProperty("c
 		private Long expireAt;
 
 		private Object info;
+
+		private FilterNode labelFilter;
+
+		private Boolean allUsers;
 
 		public Builder user(String user) {
 			this.user = user;
@@ -76,11 +81,22 @@ public record RefreshRequest(@JsonProperty("user") String user, @JsonProperty("c
 			return this;
 		}
 
+		public Builder labelFilter(FilterNode labelFilter) {
+			this.labelFilter = labelFilter;
+			return this;
+		}
+
+		public Builder allUsers(Boolean allUsers) {
+			this.allUsers = allUsers;
+			return this;
+		}
+
 		public RefreshRequest build() {
-			if (this.user == null || this.user.trim().isEmpty()) {
+			if ((this.user == null || this.user.trim().isEmpty()) && !Boolean.TRUE.equals(this.allUsers)) {
 				throw new IllegalArgumentException("'user' is required and cannot be null or empty");
 			}
-			return new RefreshRequest(this.user, this.client, this.session, this.expired, this.expireAt, this.info);
+			return new RefreshRequest(this.user, this.client, this.session, this.expired, this.expireAt, this.info,
+					this.labelFilter, this.allUsers);
 		}
 
 	}
