@@ -4,7 +4,7 @@ An unofficial Java client for the [Centrifugo](https://centrifugal.dev/) HTTP Se
 
 ## Features
 
-- Full coverage for the major Centrifugo HTTP Server API categories
+- Full coverage for the Centrifugo v6.8 HTTP Server API exposed by Swagger
 - Strongly typed request and response models
 - Fluent builders for request creation
 - OpenFeign-based HTTP client integration
@@ -19,7 +19,7 @@ Add the dependency to your `pom.xml`:
 <dependency>
     <groupId>ch.rasc</groupId>
     <artifactId>jcentserver-client</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.3</version>
 </dependency>
 ```
 
@@ -59,8 +59,12 @@ The client facade exposes the following API groups:
 - `client.rpc()` for `rpc()`
 - `client.stats()` for `channels()`, `connections()`, and `info()`
 - `client.channels()` as a convenience alias for channel lookups
+- `client.userStatus()` for `updateUserStatus()`, `getUserStatus()`, and `deleteUserStatus()`
 - `client.userBlock()` for `blockUser()` and `unblockUser()`
 - `client.token()` for `revokeToken()` and `invalidateUserTokens()`
+- `client.device()` for device and topic registration, updates, removal, and listing
+- `client.push()` for push notification sending, status updates, and cancellation
+- `client.map()` for map state, map stream, map stats, map clearing, and shared poll publishing
 - `client.batch()` for batched commands
 
 ## Examples
@@ -109,6 +113,27 @@ BroadcastRequest request = BroadcastRequest.builder()
 client.publication().broadcast(request);
 ```
 
+### Map API
+
+```java
+import java.util.Map;
+
+import ch.rasc.jcentserverclient.models.MapPublishRequest;
+import ch.rasc.jcentserverclient.models.MapReadStateRequest;
+
+client.map().mapPublish(MapPublishRequest.builder()
+    .channel("documents")
+    .key("doc-42")
+    .data(Map.of("title", "API notes"))
+    .score(System.currentTimeMillis())
+    .build());
+
+var state = client.map().mapReadState(new MapReadStateRequest(
+    "documents", null, 100, null, true, null, null));
+
+System.out.println(state.result().entries().size());
+```
+
 ### Connection Management
 
 ```java
@@ -132,6 +157,24 @@ DisconnectRequest disconnectRequest = DisconnectRequest.builder()
     .build();
 
 client.connection().disconnect(disconnectRequest);
+```
+
+### Label-based Targeting
+
+```java
+import ch.rasc.jcentserverclient.models.FilterNode;
+import ch.rasc.jcentserverclient.models.RefreshRequest;
+
+RefreshRequest request = RefreshRequest.builder()
+    .allUsers(true)
+    .labelFilter(FilterNode.builder()
+        .op("eq")
+        .key("tenant")
+        .val("acme")
+        .build())
+    .build();
+
+client.connection().refresh(request);
 ```
 
 ### Custom RPC
@@ -177,6 +220,29 @@ import ch.rasc.jcentserverclient.models.InfoRequest;
 
 var response = client.stats().info(InfoRequest.builder().build());
 System.out.println(response.result().nodes().size());
+```
+
+### Push Notifications
+
+```java
+import java.util.List;
+import java.util.Map;
+
+import ch.rasc.jcentserverclient.models.PushNotification;
+import ch.rasc.jcentserverclient.models.PushRecipient;
+import ch.rasc.jcentserverclient.models.SendPushNotificationRequest;
+import ch.rasc.jcentserverclient.models.WebPushPushNotification;
+
+SendPushNotificationRequest request = SendPushNotificationRequest.builder()
+    .uid("push-1")
+    .recipient(new PushRecipient(null, null, null, null, null, null, null, null,
+        List.of("webpush-token")))
+    .notification(new PushNotification(null, null, null,
+        new WebPushPushNotification(Map.of("TTL", "60"), Map.of("title", "Hello")),
+        System.currentTimeMillis() / 1000 + 3600))
+    .build();
+
+client.push().sendPushNotification(request);
 ```
 
 ## Configuration
@@ -248,6 +314,8 @@ Example Centrifugo config:
 ## Testing
 
 The integration test suite starts a `centrifugo/centrifugo:v6` container automatically via Testcontainers.
+The checked-in `swagger.json` is downloaded from a Centrifugo v6.8.3 server with Swagger enabled, and
+`SwaggerAlignmentTest` verifies that the Feign endpoints match it exactly.
 
 Run the full suite:
 
@@ -274,13 +342,3 @@ This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE) fo
 - [Centrifugo Documentation](https://centrifugal.dev/)
 - [Centrifugo HTTP API Reference](https://centrifugal.dev/docs/server/server_api)
 - [OpenFeign](https://github.com/OpenFeign/feign)
-
-## License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
-## Links
-
-- [Centrifugo Documentation](https://centrifugal.dev/)
-- [Centrifugo HTTP API Reference](https://centrifugal.dev/docs/server/server_api)
-- [OpenFeign](https://github.com/OpenFeign/feign)" 
