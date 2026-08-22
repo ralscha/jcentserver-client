@@ -46,7 +46,7 @@
     </snapshotRepository>
   </distributionManagement>
   <properties>
-    <openfeign.version>13.13</openfeign.version>
+    <openfeign.version>13.14</openfeign.version>
   </properties>
 
   <dependencyManagement>
