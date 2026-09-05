@@ -325,7 +325,9 @@ can contain per-operation errors and must still be inspected individually.
 
 ## Testing
 
-The integration test suite starts a `centrifugo/centrifugo:v6` container automatically via Testcontainers.
+The integration test suite starts a `centrifugo/centrifugo:v6.9.3` container automatically via
+Testcontainers. The version is pinned so that the checked-in Swagger snapshot is compared with the
+same API contract on every platform, even when an older `v6` image is cached locally.
 `LiveSwaggerAlignmentIntegrationTest` compares the checked-in `swagger.json` with the document served by
 that live container. `SwaggerAlignmentTest` additionally verifies every endpoint's request/response binding
 and every model's JSON property names and Java types.

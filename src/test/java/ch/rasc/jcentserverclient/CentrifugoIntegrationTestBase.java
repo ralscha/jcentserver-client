@@ -30,7 +30,9 @@ public abstract class CentrifugoIntegrationTestBase {
 
 	protected static final int CENTRIFUGO_PORT = 8000;
 
-	protected static final GenericContainer<?> centrifugo = new GenericContainer<>("centrifugo/centrifugo:v6")
+	private static final String CENTRIFUGO_IMAGE = "centrifugo/centrifugo:v6.9.3";
+
+	protected static final GenericContainer<?> centrifugo = new GenericContainer<>(CENTRIFUGO_IMAGE)
 		.withExposedPorts(CENTRIFUGO_PORT)
 		.withCopyFileToContainer(MountableFile.forClasspathResource("centrifugo-test-config.json"),
 				"/centrifugo/config.json")
