@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record DeviceRegisterRequest(@JsonProperty("id") String id, @JsonProperty("provider") String provider,
 		@JsonProperty("token") String token, @JsonProperty("platform") String platform,
 		@JsonProperty("user") String user, @JsonProperty("meta") Map<String, String> meta,

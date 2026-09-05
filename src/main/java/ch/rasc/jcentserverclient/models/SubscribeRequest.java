@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for subscribing a user to a channel.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record SubscribeRequest(@JsonProperty("channel") String channel, @JsonProperty("user") String user,
 		@JsonProperty("expire_at") Long expireAt, @JsonProperty("info") Object info,

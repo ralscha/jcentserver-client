@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for batch operations.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record BatchRequest(@JsonProperty("commands") List<Command> commands,
 		@JsonProperty("parallel") Boolean parallel) {

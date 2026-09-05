@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for getting connections information.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record ConnectionsRequest(@JsonProperty("user") String user, @JsonProperty("expression") String expression,
 		@JsonProperty("label_filter") FilterNode labelFilter) {

@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for disconnecting a user.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record DisconnectRequest(@JsonProperty("user") String user, @JsonProperty("client") String client,
 		@JsonProperty("session") String session, @JsonProperty("whitelist") List<String> whitelist,

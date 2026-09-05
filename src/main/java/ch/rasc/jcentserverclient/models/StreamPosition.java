@@ -44,6 +44,12 @@ public record StreamPosition(@JsonProperty("offset") Long offset, @JsonProperty(
 		}
 
 		public StreamPosition build() {
+			if (this.offset == null) {
+				throw new IllegalArgumentException("'offset' is required and cannot be null");
+			}
+			if (this.epoch == null || this.epoch.isBlank()) {
+				throw new IllegalArgumentException("'epoch' is required and cannot be null or empty");
+			}
 			return new StreamPosition(this.offset, this.epoch);
 		}
 

@@ -4,7 +4,8 @@ An unofficial Java client for the [Centrifugo](https://centrifugal.dev/) HTTP Se
 
 ## Features
 
-- Full coverage for the Centrifugo v6.8 HTTP Server API exposed by Swagger
+- Full coverage for the Centrifugo v6 HTTP Server API exposed by Swagger, including
+  experimental and Centrifugo PRO contracts
 - Strongly typed request and response models
 - Fluent builders for request creation
 - OpenFeign-based HTTP client integration
@@ -64,7 +65,7 @@ The client facade exposes the following API groups:
 - `client.token()` for `revokeToken()` and `invalidateUserTokens()`
 - `client.device()` for device and topic registration, updates, removal, and listing
 - `client.push()` for push notification sending, status updates, and cancellation
-- `client.map()` for map state, map stream, map stats, map clearing, and shared poll publishing
+- `client.map()` for map publishing/removal, state, stream, stats, clearing, and shared poll publishing
 - `client.batch()` for batched commands
 
 ## Examples
@@ -119,7 +120,6 @@ client.publication().broadcast(request);
 import java.util.Map;
 
 import ch.rasc.jcentserverclient.models.MapPublishRequest;
-import ch.rasc.jcentserverclient.models.MapReadStateRequest;
 
 client.map().mapPublish(MapPublishRequest.builder()
     .channel("documents")
@@ -128,8 +128,10 @@ client.map().mapPublish(MapPublishRequest.builder()
     .score(System.currentTimeMillis())
     .build());
 
-var state = client.map().mapReadState(new MapReadStateRequest(
-    "documents", null, 100, null, true, null, null));
+var state = client.map().mapReadState(builder -> builder
+    .channel("documents")
+    .limit(100)
+    .asc(true));
 
 System.out.println(state.result().entries().size());
 ```
@@ -267,6 +269,7 @@ Configuration configuration = Configuration.builder()
     .apiKey("your-api-key")
     .baseUrl("https://your-centrifugo-server.com/api")
     .client(new Http2Client())
+    .transportErrorMode(true)
     .logLevel(Logger.Level.BASIC)
     .build();
 
@@ -299,7 +302,8 @@ catch (ApiException e) {
 
 ## Authentication
 
-The client authenticates with the `X-API-Key` header. Configure the same key on both sides.
+When `apiKey` is configured, the client authenticates with the `X-API-Key` header. Configure
+the same key on both sides.
 
 Example Centrifugo config:
 
@@ -311,11 +315,20 @@ Example Centrifugo config:
 }
 ```
 
+The API key is optional so the client can also connect to a server configured with
+`http_api.insecure` (development only), or use an `additionalRequestInterceptor` for another
+authentication mechanism.
+
+Set `transportErrorMode(true)` to send `X-Centrifugo-Error-Mode: transport` on every request.
+In that mode, ordinary API errors are decoded into `ApiException`. Batch and broadcast calls
+can contain per-operation errors and must still be inspected individually.
+
 ## Testing
 
 The integration test suite starts a `centrifugo/centrifugo:v6` container automatically via Testcontainers.
-The checked-in `swagger.json` is downloaded from a Centrifugo v6.8.3 server with Swagger enabled, and
-`SwaggerAlignmentTest` verifies that the Feign endpoints match it exactly.
+`LiveSwaggerAlignmentIntegrationTest` compares the checked-in `swagger.json` with the document served by
+that live container. `SwaggerAlignmentTest` additionally verifies every endpoint's request/response binding
+and every model's JSON property names and Java types.
 
 Run the full suite:
 

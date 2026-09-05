@@ -144,7 +144,7 @@ class PublicationClientIntegrationTest extends CentrifugoIntegrationTestBase {
 	}
 
 	@Test
-	@DisplayName("Should return error if empty data publication")
+	@DisplayName("Should preserve and publish an empty JSON object")
 	void shouldHandleEmptyDataPublication() {
 		// Given
 		String channel = "empty-data-channel";
@@ -157,8 +157,34 @@ class PublicationClientIntegrationTest extends CentrifugoIntegrationTestBase {
 
 		// Then
 		assertThat(response).isNotNull();
-		assertThat(response.result()).isNull();
-		assertThat(response.error()).isNotNull();
+		assertThat(response.result()).isNotNull();
+		assertThat(response.error()).isNull();
+	}
+
+	@Test
+	@DisplayName("Should publish base64 data without a JSON data field")
+	void shouldPublishBase64Data() {
+		PublishRequest request = PublishRequest.builder().channel("binary-data-channel").b64data("aGVsbG8=").build();
+
+		PublishResponse response = this.client.publication().publish(request);
+
+		assertThat(response.result()).isNotNull();
+		assertThat(response.error()).isNull();
+	}
+
+	@Test
+	@DisplayName("Should broadcast base64 data without a JSON data field")
+	void shouldBroadcastBase64Data() {
+		BroadcastRequest request = BroadcastRequest.builder()
+			.channels(List.of("binary-broadcast-1", "binary-broadcast-2"))
+			.b64data("aGVsbG8=")
+			.build();
+
+		BroadcastResponse response = this.client.publication().broadcast(request);
+
+		assertThat(response.result()).isNotNull();
+		assertThat(response.result().responses()).hasSize(2);
+		assertThat(response.hasError()).isFalse();
 	}
 
 }

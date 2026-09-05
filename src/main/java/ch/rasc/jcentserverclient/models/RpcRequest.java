@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for calling a custom RPC method.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record RpcRequest(@JsonProperty("method") String method, @JsonProperty("params") Object params) {
 

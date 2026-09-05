@@ -80,13 +80,11 @@ public class Configuration {
 
 	private final RequestInterceptor additionalRequestInterceptor;
 
+	private final boolean transportErrorMode;
+
 	private final Level logLevel;
 
 	private Configuration(Builder builder) {
-		if (builder.apiKey == null) {
-			throw new IllegalArgumentException("apiKey must not be null");
-		}
-
 		this.apiKey = builder.apiKey;
 
 		this.baseUrl = Objects.requireNonNullElse(builder.baseUrl, "http://localhost:8000/api");
@@ -98,6 +96,7 @@ public class Configuration {
 		this.logger = Objects.requireNonNullElse(builder.logger, new Slf4jLogger());
 		this.errorDecoder = Objects.requireNonNullElse(builder.errorDecoder, new ApiErrorDecoder());
 		this.additionalRequestInterceptor = builder.additionalRequestInterceptor;
+		this.transportErrorMode = builder.transportErrorMode;
 		this.logLevel = Objects.requireNonNullElse(builder.logLevel, Level.NONE);
 	}
 
@@ -135,6 +134,8 @@ public class Configuration {
 		private ErrorDecoder errorDecoder;
 
 		private RequestInterceptor additionalRequestInterceptor;
+
+		private boolean transportErrorMode;
 
 		private Level logLevel;
 
@@ -267,6 +268,23 @@ public class Configuration {
 		}
 
 		/**
+		 * Enables Centrifugo's transport-native error mode for every request.
+		 *
+		 * <p>
+		 * When enabled, the client sends {@code X-Centrifugo-Error-Mode: transport}.
+		 * Centrifugo then maps API errors to HTTP error status codes, which this client
+		 * exposes as {@link ApiException}. Batch and broadcast callers must still inspect
+		 * the individual response errors.
+		 * </p>
+		 * @param enabled whether transport error mode should be requested
+		 * @return this builder instance
+		 */
+		public Builder transportErrorMode(boolean enabled) {
+			this.transportErrorMode = enabled;
+			return this;
+		}
+
+		/**
 		 * Sets the logging level for HTTP requests and responses.
 		 *
 		 * <p>
@@ -357,6 +375,14 @@ public class Configuration {
 	 */
 	public RequestInterceptor additionalRequestInterceptor() {
 		return this.additionalRequestInterceptor;
+	}
+
+	/**
+	 * Returns whether transport-native Centrifugo errors are requested.
+	 * @return {@code true} when transport error mode is enabled
+	 */
+	public boolean transportErrorMode() {
+		return this.transportErrorMode;
 	}
 
 	/**

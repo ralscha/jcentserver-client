@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request to revoke a token.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record RevokeTokenRequest(@JsonProperty("uid") String uid, @JsonProperty("expire_at") Long expireAt) {
 

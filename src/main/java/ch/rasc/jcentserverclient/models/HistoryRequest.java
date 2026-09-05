@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for getting channel history.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record HistoryRequest(@JsonProperty("channel") String channel, @JsonProperty("limit") Integer limit,
 		@JsonProperty("since") StreamPosition since, @JsonProperty("reverse") Boolean reverse) {

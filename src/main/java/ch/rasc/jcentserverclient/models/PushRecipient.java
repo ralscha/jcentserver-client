@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record PushRecipient(@JsonProperty("filter") DeviceFilter filter,
 		@JsonProperty("fcm_tokens") List<String> fcmTokens, @JsonProperty("fcm_topic") String fcmTopic,
 		@JsonProperty("fcm_condition") String fcmCondition, @JsonProperty("hms_tokens") List<String> hmsTokens,

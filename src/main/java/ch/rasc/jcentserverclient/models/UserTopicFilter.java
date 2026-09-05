@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record UserTopicFilter(@JsonProperty("users") List<String> users, @JsonProperty("topics") List<String> topics,
 		@JsonProperty("topic_prefix") String topicPrefix) {
 }

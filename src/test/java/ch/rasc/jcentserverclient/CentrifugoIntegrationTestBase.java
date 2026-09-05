@@ -18,22 +18,18 @@ package ch.rasc.jcentserverclient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 /**
  * Base class for integration tests that require a running Centrifugo instance. Uses
  * TestContainers to start and manage a Centrifugo container.
  */
-@Testcontainers
 public abstract class CentrifugoIntegrationTestBase {
 
 	protected static final String TEST_API_KEY = "test-api-key-for-integration-tests";
 
 	protected static final int CENTRIFUGO_PORT = 8000;
 
-	@Container
 	protected static final GenericContainer<?> centrifugo = new GenericContainer<>("centrifugo/centrifugo:v6")
 		.withExposedPorts(CENTRIFUGO_PORT)
 		.withCopyFileToContainer(MountableFile.forClasspathResource("centrifugo-test-config.json"),
@@ -45,9 +41,10 @@ public abstract class CentrifugoIntegrationTestBase {
 	protected String baseUrl;
 
 	@BeforeAll
-	static void waitForCentrifugo() {
-		// Wait for Centrifugo to be ready
-		centrifugo.start();
+	static void startCentrifugo() {
+		if (!centrifugo.isRunning()) {
+			centrifugo.start();
+		}
 	}
 
 	@BeforeEach

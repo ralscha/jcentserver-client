@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record DeviceTopicListRequest(@JsonProperty("filter") DeviceTopicFilter filter,
 		@JsonProperty("include_total_count") Boolean includeTotalCount,
 		@JsonProperty("include_device") Boolean includeDevice, @JsonProperty("cursor") String cursor,

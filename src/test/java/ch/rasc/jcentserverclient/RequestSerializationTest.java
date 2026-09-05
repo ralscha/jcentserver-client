@@ -16,6 +16,7 @@
 package ch.rasc.jcentserverclient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import ch.rasc.jcentserverclient.models.InvalidateUserTokensRequest;
 import ch.rasc.jcentserverclient.models.MapPublishRequest;
 import ch.rasc.jcentserverclient.models.PublishRequest;
 import ch.rasc.jcentserverclient.models.SendPushNotificationRequest;
+import ch.rasc.jcentserverclient.models.StreamPosition;
 import ch.rasc.jcentserverclient.models.RevokeTokenRequest;
 import ch.rasc.jcentserverclient.models.RpcRequest;
 import ch.rasc.jcentserverclient.models.SubscribeOptionOverride;
@@ -59,6 +61,40 @@ class RequestSerializationTest {
 
 		assertThat(json).contains("\"version\":7");
 		assertThat(json).contains("\"version_epoch\":\"doc-epoch\"");
+	}
+
+	@Test
+	@DisplayName("Should preserve explicitly provided empty JSON data")
+	void shouldPreserveEmptyJsonData() throws Exception {
+		PublishRequest request = PublishRequest.builder().channel("chat:empty").data(Map.of()).build();
+
+		String json = OBJECT_MAPPER.writeValueAsString(request);
+
+		assertThat(json).isEqualTo("{\"channel\":\"chat:empty\",\"data\":{}}");
+	}
+
+	@Test
+	@DisplayName("Should allow base64 data instead of JSON data")
+	void shouldAllowBase64DataInsteadOfJsonData() throws Exception {
+		PublishRequest request = PublishRequest.builder().channel("chat:binary").b64data("aGVsbG8=").build();
+
+		String json = OBJECT_MAPPER.writeValueAsString(request);
+
+		assertThat(json).isEqualTo("{\"channel\":\"chat:binary\",\"b64data\":\"aGVsbG8=\"}");
+	}
+
+	@Test
+	@DisplayName("Should require complete stream positions documented by Centrifugo")
+	void shouldRequireCompleteStreamPositions() {
+		assertThatThrownBy(() -> StreamPosition.builder().epoch("epoch").build())
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("offset");
+		assertThatThrownBy(() -> StreamPosition.builder().offset(1L).build())
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("epoch");
+
+		assertThat(StreamPosition.builder().offset(1L).epoch("epoch").build())
+			.isEqualTo(new StreamPosition(1L, "epoch"));
 	}
 
 	@Test

@@ -19,6 +19,28 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record MapClearRequest(@JsonProperty("channel") String channel) {
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private String channel;
+
+		public Builder channel(String channel) {
+			this.channel = channel;
+			return this;
+		}
+
+		public MapClearRequest build() {
+			if (this.channel == null || this.channel.isBlank()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
+			return new MapClearRequest(this.channel);
+		}
+
+	}
 }

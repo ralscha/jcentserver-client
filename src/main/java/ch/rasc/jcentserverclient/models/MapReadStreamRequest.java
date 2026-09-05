@@ -19,8 +19,58 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record MapReadStreamRequest(@JsonProperty("channel") String channel,
 		@JsonProperty("since_offset") Long sinceOffset, @JsonProperty("since_epoch") String sinceEpoch,
 		@JsonProperty("limit") Integer limit, @JsonProperty("reverse") Boolean reverse) {
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private String channel;
+
+		private Long sinceOffset;
+
+		private String sinceEpoch;
+
+		private Integer limit;
+
+		private Boolean reverse;
+
+		public Builder channel(String channel) {
+			this.channel = channel;
+			return this;
+		}
+
+		public Builder sinceOffset(Long sinceOffset) {
+			this.sinceOffset = sinceOffset;
+			return this;
+		}
+
+		public Builder sinceEpoch(String sinceEpoch) {
+			this.sinceEpoch = sinceEpoch;
+			return this;
+		}
+
+		public Builder limit(Integer limit) {
+			this.limit = limit;
+			return this;
+		}
+
+		public Builder reverse(Boolean reverse) {
+			this.reverse = reverse;
+			return this;
+		}
+
+		public MapReadStreamRequest build() {
+			if (this.channel == null || this.channel.isBlank()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
+			return new MapReadStreamRequest(this.channel, this.sinceOffset, this.sinceEpoch, this.limit, this.reverse);
+		}
+
+	}
 }

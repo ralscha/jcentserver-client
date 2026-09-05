@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request to invalidate all tokens for a user.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record InvalidateUserTokensRequest(@JsonProperty("user") String user,
 		@JsonProperty("issued_before") Long issuedBefore, @JsonProperty("expire_at") Long expireAt,

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request to block a user.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record BlockUserRequest(@JsonProperty("user") String user, @JsonProperty("expire_at") Long expiredAt) {
 

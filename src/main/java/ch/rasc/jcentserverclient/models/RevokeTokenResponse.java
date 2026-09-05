@@ -22,4 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public record RevokeTokenResponse(@JsonProperty("error") Error error,
 		@JsonProperty("result") RevokeTokenResult result) {
+
+	public boolean hasError() {
+		return this.error != null;
+	}
 }

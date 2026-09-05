@@ -22,4 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public record InvalidateUserTokensResponse(@JsonProperty("error") Error error,
 		@JsonProperty("result") InvalidateUserTokensResult result) {
+
+	public boolean hasError() {
+		return this.error != null;
+	}
 }

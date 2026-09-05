@@ -19,8 +19,73 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record MapReadStateRequest(@JsonProperty("channel") String channel, @JsonProperty("cursor") String cursor,
 		@JsonProperty("limit") Integer limit, @JsonProperty("key") String key, @JsonProperty("asc") Boolean asc,
 		@JsonProperty("revision_offset") Long revisionOffset, @JsonProperty("revision_epoch") String revisionEpoch) {
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private String channel;
+
+		private String cursor;
+
+		private Integer limit;
+
+		private String key;
+
+		private Boolean asc;
+
+		private Long revisionOffset;
+
+		private String revisionEpoch;
+
+		public Builder channel(String channel) {
+			this.channel = channel;
+			return this;
+		}
+
+		public Builder cursor(String cursor) {
+			this.cursor = cursor;
+			return this;
+		}
+
+		public Builder limit(Integer limit) {
+			this.limit = limit;
+			return this;
+		}
+
+		public Builder key(String key) {
+			this.key = key;
+			return this;
+		}
+
+		public Builder asc(Boolean asc) {
+			this.asc = asc;
+			return this;
+		}
+
+		public Builder revisionOffset(Long revisionOffset) {
+			this.revisionOffset = revisionOffset;
+			return this;
+		}
+
+		public Builder revisionEpoch(String revisionEpoch) {
+			this.revisionEpoch = revisionEpoch;
+			return this;
+		}
+
+		public MapReadStateRequest build() {
+			if (this.channel == null || this.channel.isBlank()) {
+				throw new IllegalArgumentException("'channel' is required and cannot be null or empty");
+			}
+			return new MapReadStateRequest(this.channel, this.cursor, this.limit, this.key, this.asc,
+					this.revisionOffset, this.revisionEpoch);
+		}
+
+	}
 }

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record UpdatePushStatusRequest(@JsonProperty("analytics_uid") String analyticsUid,
 		@JsonProperty("status") String status, @JsonProperty("device_id") String deviceId,
 		@JsonProperty("msg_id") String msgId) {

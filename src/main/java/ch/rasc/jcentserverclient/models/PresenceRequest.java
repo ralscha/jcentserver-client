@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for getting channel presence information.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record PresenceRequest(@JsonProperty("channel") String channel) {
 
 	public static PresenceRequest of(String channel) {

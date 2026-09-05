@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record MapPublishRequest(@JsonProperty("channel") String channel, @JsonProperty("key") String key,
 		@JsonProperty("data") Object data, @JsonProperty("b64data") String b64data,

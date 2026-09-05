@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for unsubscribing a user from a channel.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record UnsubscribeRequest(@JsonProperty("user") String user, @JsonProperty("channel") String channel,
 		@JsonProperty("client") String client, @JsonProperty("session") String session,

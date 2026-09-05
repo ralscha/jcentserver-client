@@ -22,4 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public record UnblockUserResponse(@JsonProperty("error") Error error,
 		@JsonProperty("result") UnblockUserResult result) {
+
+	public boolean hasError() {
+		return this.error != null;
+	}
 }

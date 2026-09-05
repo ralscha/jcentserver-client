@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Request for broadcasting data to multiple channels.
  */
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 @SuppressWarnings({ "hiding" })
 public record BroadcastRequest(@JsonProperty("channels") List<String> channels, @JsonProperty("data") Object data,
 		@JsonProperty("b64data") String b64data, @JsonProperty("skip_history") Boolean skipHistory,
@@ -111,8 +111,8 @@ public record BroadcastRequest(@JsonProperty("channels") List<String> channels, 
 			if (this.channels == null || this.channels.isEmpty()) {
 				throw new IllegalArgumentException("'channels' is required and cannot be null or empty");
 			}
-			if (this.data == null) {
-				throw new IllegalArgumentException("'data' is required and cannot be null");
+			if (this.data == null && (this.b64data == null || this.b64data.isBlank())) {
+				throw new IllegalArgumentException("either 'data' or 'b64data' is required");
 			}
 			return new BroadcastRequest(this.channels, this.data, this.b64data, this.skipHistory, this.tags,
 					this.idempotencyKey, this.delta, this.version, this.versionEpoch);

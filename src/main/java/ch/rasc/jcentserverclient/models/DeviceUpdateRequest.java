@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record DeviceUpdateRequest(@JsonProperty("ids") List<String> ids, @JsonProperty("users") List<String> users,
 		@JsonProperty("user_update") DeviceUserUpdate userUpdate,
 		@JsonProperty("meta_update") DeviceMetaUpdate metaUpdate,

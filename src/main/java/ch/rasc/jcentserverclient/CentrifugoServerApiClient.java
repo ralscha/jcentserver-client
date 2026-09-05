@@ -151,6 +151,9 @@ public class CentrifugoServerApiClient {
 		if (configuration.apiKey() != null && !configuration.apiKey().isBlank()) {
 			interceptors.add(new ApiKeyRequestInterceptor(configuration.apiKey()));
 		}
+		if (configuration.transportErrorMode()) {
+			interceptors.add(template -> template.header("X-Centrifugo-Error-Mode", "transport"));
+		}
 
 		String baseUrl = configuration.baseUrl();
 

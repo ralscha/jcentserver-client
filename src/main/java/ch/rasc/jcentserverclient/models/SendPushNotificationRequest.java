@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record SendPushNotificationRequest(@JsonProperty("recipient") PushRecipient recipient,
 		@JsonProperty("notification") PushNotification notification, @JsonProperty("uid") String uid,
 		@JsonProperty("send_at") Long sendAt, @JsonProperty("optimize_for_reliability") Boolean optimizeForReliability,

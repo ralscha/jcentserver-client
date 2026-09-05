@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record DeviceTopicFilter(@JsonProperty("device_ids") List<String> deviceIds,
 		@JsonProperty("device_providers") List<String> deviceProviders,
 		@JsonProperty("device_platforms") List<String> devicePlatforms,

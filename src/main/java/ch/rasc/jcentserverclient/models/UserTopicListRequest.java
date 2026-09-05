@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonInclude(Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public record UserTopicListRequest(@JsonProperty("filter") UserTopicFilter filter,
 		@JsonProperty("include_total_count") Boolean includeTotalCount, @JsonProperty("cursor") String cursor,
 		@JsonProperty("limit") Integer limit) {

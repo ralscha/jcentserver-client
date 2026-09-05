@@ -37,6 +37,25 @@ public interface PushClient {
 		return this.sendNotification(fn.apply(SendPushNotificationRequest.builder()).build());
 	}
 
+	/**
+	 * Alias matching the Centrifugo {@code send_push_notification} operation name.
+	 * @param request the notification request
+	 * @return the Centrifugo response
+	 */
+	default SendPushNotificationResponse sendPushNotification(SendPushNotificationRequest request) {
+		return this.sendNotification(request);
+	}
+
+	/**
+	 * Builder overload for {@link #sendPushNotification(SendPushNotificationRequest)}.
+	 * @param fn request builder configuration
+	 * @return the Centrifugo response
+	 */
+	default SendPushNotificationResponse sendPushNotification(
+			Function<SendPushNotificationRequest.Builder, SendPushNotificationRequest.Builder> fn) {
+		return this.sendNotification(fn);
+	}
+
 	@RequestLine("POST /update_push_status")
 	UpdatePushStatusResponse updateStatus(UpdatePushStatusRequest request);
 
@@ -45,11 +64,28 @@ public interface PushClient {
 		return this.updateStatus(fn.apply(UpdatePushStatusRequest.builder()).build());
 	}
 
+	default UpdatePushStatusResponse updatePushStatus(UpdatePushStatusRequest request) {
+		return this.updateStatus(request);
+	}
+
+	default UpdatePushStatusResponse updatePushStatus(
+			Function<UpdatePushStatusRequest.Builder, UpdatePushStatusRequest.Builder> fn) {
+		return this.updateStatus(fn);
+	}
+
 	@RequestLine("POST /cancel_push")
 	CancelPushResponse cancel(CancelPushRequest request);
 
 	default CancelPushResponse cancel(Function<CancelPushRequest.Builder, CancelPushRequest.Builder> fn) {
 		return this.cancel(fn.apply(CancelPushRequest.builder()).build());
+	}
+
+	default CancelPushResponse cancelPush(CancelPushRequest request) {
+		return this.cancel(request);
+	}
+
+	default CancelPushResponse cancelPush(Function<CancelPushRequest.Builder, CancelPushRequest.Builder> fn) {
+		return this.cancel(fn);
 	}
 
 }

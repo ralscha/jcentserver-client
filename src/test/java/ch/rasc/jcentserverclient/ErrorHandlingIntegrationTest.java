@@ -50,6 +50,25 @@ class ErrorHandlingIntegrationTest extends CentrifugoIntegrationTestBase {
 	}
 
 	@Test
+	@DisplayName("Should turn API errors into ApiException in transport error mode")
+	void shouldUseTransportErrorMode() {
+		CentrifugoServerApiClient transportErrorClient = CentrifugoServerApiClient
+			.create(config -> config.apiKey(TEST_API_KEY).baseUrl(this.baseUrl).transportErrorMode(true));
+
+		PublishRequest request = PublishRequest.builder()
+			.channel("unknown:channel")
+			.data(Map.of("message", "test"))
+			.build();
+
+		assertThatThrownBy(() -> transportErrorClient.publication().publish(request)).isInstanceOf(ApiException.class)
+			.satisfies(exception -> {
+				ApiException apiException = (ApiException) exception;
+				assertThat(apiException.status()).isEqualTo(404);
+				assertThat(apiException.getErrorCode()).isEqualTo(102);
+			});
+	}
+
+	@Test
 	@DisplayName("Should handle empty channel name with exception")
 	void shouldHandleEmptyChannelName() {
 		assertThatThrownBy(() -> PublishRequest.builder().channel("").data(Map.of("message", "test")).build())
