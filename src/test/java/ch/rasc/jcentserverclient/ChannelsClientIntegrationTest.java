@@ -86,6 +86,16 @@ class ChannelsClientIntegrationTest extends CentrifugoIntegrationTestBase {
 	}
 
 	@Test
+	@DisplayName("Should reject an invalid pattern as a permanent bad request")
+	void shouldRejectInvalidPattern() {
+		ChannelsResponse response = this.client.channels().channels(ChannelsRequest.of("["));
+
+		assertThat(response.hasError()).isTrue();
+		assertThat(response.error().code()).isEqualTo(107L);
+		assertThat(Boolean.TRUE.equals(response.error().temporary())).isFalse();
+	}
+
+	@Test
 	@DisplayName("Should handle empty channel list")
 	void shouldHandleEmptyChannelList() {
 		// Given - Use a pattern that matches no channels

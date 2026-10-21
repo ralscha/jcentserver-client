@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import feign.Request;
 import feign.Response;
@@ -41,6 +43,7 @@ class ApiErrorDecoderTest {
 		ApiException apiException = (ApiException) exception;
 		assertThat(apiException.getErrorCode()).isEqualTo(107);
 		assertThat(apiException.getErrorMessage()).isEqualTo("bad request");
+		assertThat(apiException.error().getTemporary()).isNull();
 	}
 
 	@Test
@@ -54,6 +57,35 @@ class ApiErrorDecoderTest {
 		assertThat(apiException.getErrorCode()).isEqualTo(107);
 		assertThat(apiException.getErrorMessage()).isEqualTo("bad request");
 		assertThat(apiException.status()).isEqualTo(400);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "500, 100, internal, true", "429, 111, too many requests, true", "400, 107, bad request, false" })
+	@DisplayName("Should preserve retry advice in transport error mode")
+	void shouldDecodeTemporaryTransportErrors(int status, int code, String message, boolean temporary) {
+		String body = """
+				{"code":%d,"message":"%s","temporary":%s}
+				""".formatted(code, message, temporary);
+
+		ApiException exception = (ApiException) this.decoder.decode("method", response(status, body));
+
+		assertThat(exception.status()).isEqualTo(status);
+		assertThat(exception.getErrorCode()).isEqualTo(code);
+		assertThat(exception.getErrorMessage()).isEqualTo(message);
+		assertThat(exception.error().getTemporary()).isEqualTo(temporary);
+	}
+
+	@Test
+	@DisplayName("Should preserve retry advice in wrapped errors")
+	void shouldDecodeTemporaryWrappedError() {
+		String body = """
+				{"error":{"code":111,"message":"too many requests","temporary":true}}
+				""";
+
+		ApiException exception = (ApiException) this.decoder.decode("method", response(200, body));
+
+		assertThat(exception.getErrorCode()).isEqualTo(111);
+		assertThat(exception.error().getTemporary()).isTrue();
 	}
 
 	private static Response response(int status, String body) {

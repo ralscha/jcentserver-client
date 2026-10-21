@@ -46,7 +46,7 @@
     </snapshotRepository>
   </distributionManagement>
   <properties>
-    <openfeign.version>13.15</openfeign.version>
+    <openfeign.version>13.17</openfeign.version>
   </properties>
 
   <dependencyManagement>
@@ -54,7 +54,7 @@
       <dependency>
         <groupId>tools.jackson</groupId>
         <artifactId>jackson-bom</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -120,7 +120,7 @@
       <plugin>
         <groupId>org.sonatype.central</groupId>
         <artifactId>central-publishing-maven-plugin</artifactId>
-        <version>0.11.0</version>
+        <version>0.12.0</version>
         <extensions>true</extensions>
         <configuration>
           <publishingServerId>central</publishingServerId>

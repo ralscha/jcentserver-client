@@ -28,13 +28,21 @@ public class ApiError {
 	@JsonProperty("message")
 	private String message;
 
+	@JsonProperty("temporary")
+	private Boolean temporary;
+
 	public ApiError() {
 		// Default constructor for JSON deserialization
 	}
 
 	public ApiError(Integer code, String message) {
+		this(code, message, null);
+	}
+
+	public ApiError(Integer code, String message, Boolean temporary) {
 		this.code = code;
 		this.message = message;
+		this.temporary = temporary;
 	}
 
 	public Integer getCode() {
@@ -53,9 +61,18 @@ public class ApiError {
 		this.message = message;
 	}
 
+	public Boolean getTemporary() {
+		return this.temporary;
+	}
+
+	public void setTemporary(Boolean temporary) {
+		this.temporary = temporary;
+	}
+
 	@Override
 	public String toString() {
-		return "ApiError{" + "code=" + this.code + ", message='" + this.message + '\'' + '}';
+		return "ApiError{" + "code=" + this.code + ", message='" + this.message + '\'' + ", temporary=" + this.temporary
+				+ '}';
 	}
 
 }

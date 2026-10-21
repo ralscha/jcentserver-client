@@ -30,7 +30,7 @@ public abstract class CentrifugoIntegrationTestBase {
 
 	protected static final int CENTRIFUGO_PORT = 8000;
 
-	private static final String CENTRIFUGO_IMAGE = "centrifugo/centrifugo:v6.9.3";
+	private static final String CENTRIFUGO_IMAGE = "centrifugo/centrifugo:v6.10.1";
 
 	protected static final GenericContainer<?> centrifugo = new GenericContainer<>(CENTRIFUGO_IMAGE)
 		.withExposedPorts(CENTRIFUGO_PORT)

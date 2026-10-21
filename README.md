@@ -278,6 +278,15 @@ CentrifugoServerApiClient client = CentrifugoServerApiClient.create(configuratio
 
 ## Error Handling
 
+Centrifugo 6.10 adds a `temporary` flag to API errors. Read it with
+`response.error().temporary()` or, in transport error mode,
+`exception.error().getTemporary()`. `Boolean.TRUE.equals(temporary)` indicates
+that the same request may succeed later, including error `111` (too many requests,
+HTTP 429). The flag is nullable when the server omits it; the existing two-argument
+error constructors remain supported. API errors are not retried automatically.
+When retrying a publication, reuse its `idempotency_key` because a temporary error
+does not guarantee that the publication was not delivered.
+
 ```java
 import ch.rasc.jcentserverclient.ApiException;
 
@@ -325,7 +334,7 @@ can contain per-operation errors and must still be inspected individually.
 
 ## Testing
 
-The integration test suite starts a `centrifugo/centrifugo:v6.9.3` container automatically via
+The integration test suite starts a `centrifugo/centrifugo:v6.10.1` container automatically via
 Testcontainers. The version is pinned so that the checked-in Swagger snapshot is compared with the
 same API contract on every platform, even when an older `v6` image is cached locally.
 `LiveSwaggerAlignmentIntegrationTest` compares the checked-in `swagger.json` with the document served by
